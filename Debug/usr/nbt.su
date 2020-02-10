@@ -1,0 +1,2 @@
+nbt.cpp:12:6:void NBT_init(nbt_t*, uint32_t)	8	static
+nbt.cpp:18:6:bool NBT_handler(nbt_t*)	8	static

@@ -1,0 +1,10 @@
+ringbuffer.cpp:44:11:uint16_t ringbuffer_data_len(ringbuffer*)	0	static
+ringbuffer.cpp:61:11:uint16_t ringbuffer_free_len(ringbuffer*)	0	static
+ringbuffer.cpp:69:11:uint32_t ringbuffer_put(ringbuffer*, const uint8_t*, uint16_t)	24	static
+ringbuffer.cpp:117:10:uint32_t ringbuffer_put_force(ringbuffer*, const uint8_t*, uint16_t)	24	static
+ringbuffer.cpp:160:11:uint32_t ringbuffer_get(ringbuffer*, uint8_t*, uint16_t)	24	static
+ringbuffer.cpp:206:11:uint32_t ringbuffer_putchar(ringbuffer*, uint8_t)	8	static
+ringbuffer.cpp:232:11:uint32_t ringbuffer_putchar_force(ringbuffer*, uint8_t)	4	static
+ringbuffer.cpp:266:11:uint32_t ringbuffer_getchar(ringbuffer*, uint8_t*)	4	static
+ringbuffer.cpp:290:7:void ringbuffer_flush(ringbuffer*)	4	static
+ringbuffer.cpp:299:7:void ringbuffer_init(ringbuffer*, uint8_t*, int16_t)	8	static
