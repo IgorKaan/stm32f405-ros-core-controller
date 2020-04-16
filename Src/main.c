@@ -52,7 +52,6 @@ uint8_t usbRxData[APP_RX_DATA_SIZE] ;                                           
 /* Private variables ---------------------------------------------------------*/
 CAN_HandleTypeDef hcan1;
 
-
 I2C_HandleTypeDef hi2c1;
 
 osThreadId defaultTaskHandle;
@@ -62,8 +61,9 @@ osThreadId wheelControltasHandle;
 CAN_TxHeaderTypeDef r_wheelHeader;
 CAN_TxHeaderTypeDef l_wheelHeader;
 CAN_FilterTypeDef sFilterConfig;
-CAN_RxHeaderTypeDef pRxHeader;
+CAN_RxHeaderTypeDef wheel_RxHeader;
 uint32_t TxMailbox;
+uint32_t leftCount, rightCount;
 uint8_t ctrl = 0x00;
 int16_t allData[6];
 uint8_t control_data_left[2];
@@ -72,6 +72,11 @@ int8_t sideDataRight;
 int8_t speedDataRight;
 int8_t sideDataLeft;
 int8_t speedDataLeft;
+uint8_t speedRXDataRight;
+uint8_t speedRXDataLeft;
+uint8_t sideRXDataRight;
+uint8_t sideRXDataLeft;
+uint8_t speedRXData[8];
 float gyroX;
 float gyroY;
 float gyroZ;
@@ -143,15 +148,25 @@ int main(void)
   r_wheelHeader.DLC = 2;
   r_wheelHeader.IDE = CAN_ID_STD;
   r_wheelHeader.RTR = CAN_RTR_DATA;
-  r_wheelHeader.StdId = 0x244;
+  r_wheelHeader.StdId = 0xF;
 
   l_wheelHeader.DLC = 2;
   l_wheelHeader.IDE = CAN_ID_STD;
   l_wheelHeader.RTR = CAN_RTR_DATA;
-  l_wheelHeader.StdId = 0x243;
+  l_wheelHeader.StdId = 0x1F;
+
+//  right_wheel_RxHeader.DLC = 1;
+//  right_wheel_RxHeader.IDE = CAN_ID_STD;
+//  right_wheel_RxHeader.RTR = CAN_RTR_DATA;
+//  right_wheel_RxHeader.StdId = 0xFF;
+//
+//  left_wheel_RxHeader.DLC = 1;
+//  left_wheel_RxHeader.IDE = CAN_ID_STD;
+//  left_wheel_RxHeader.RTR = CAN_RTR_DATA;
+//  left_wheel_RxHeader.StdId = 0x3F;
 
   sFilterConfig.FilterFIFOAssignment = CAN_FILTER_FIFO0;
-  sFilterConfig.FilterIdHigh = 0x245<<5;
+  sFilterConfig.FilterIdHigh = 0;
   sFilterConfig.FilterIdLow = 0;
   sFilterConfig.FilterMaskIdHigh = 0;
   sFilterConfig.FilterMaskIdLow = 0;
@@ -271,11 +286,11 @@ static void MX_CAN1_Init(void)
 
   /* USER CODE END CAN1_Init 1 */
   hcan1.Instance = CAN1;
-  hcan1.Init.Prescaler = 21;
+  hcan1.Init.Prescaler = 3;
   hcan1.Init.Mode = CAN_MODE_NORMAL;
   hcan1.Init.SyncJumpWidth = CAN_SJW_1TQ;
-  hcan1.Init.TimeSeg1 = CAN_BS1_12TQ;
-  hcan1.Init.TimeSeg2 = CAN_BS2_4TQ;
+  hcan1.Init.TimeSeg1 = CAN_BS1_11TQ;
+  hcan1.Init.TimeSeg2 = CAN_BS2_2TQ;
   hcan1.Init.TimeTriggeredMode = DISABLE;
   hcan1.Init.AutoBusOff = DISABLE;
   hcan1.Init.AutoWakeUp = DISABLE;
@@ -355,7 +370,30 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
 
+	HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO0, &wheel_RxHeader, &speedRXData);
+	//osDelay(5);
+	if (wheel_RxHeader.StdId == 0xFFF) {
+
+	}
+	else if (wheel_RxHeader.StdId == 0x7F) {
+		speedRXDataLeft = speedRXData[0];
+		sideRXDataLeft = speedRXData[1];
+		//leftCount++;
+		//rpm_left_handler();
+		//osDelay(1);
+
+	}
+	else if (wheel_RxHeader.StdId == 0x3F) {
+		speedRXDataRight = speedRXData[0];
+		sideRXDataRight = speedRXData[1];
+		//rightCount++;
+		//rpm_right_handler();
+		//osDelay(1);
+	}
+	wheel_RxHeader.StdId = 0x0000;
+}
 /* USER CODE END 4 */
 
 /* USER CODE BEGIN Header_StartDefaultTask */
@@ -381,7 +419,6 @@ void StartDefaultTask(void const * argument)
 	  osDelay(5);
 	  accel_handler();
 	  osDelay(5);
-	  spinOnce();
   }
   /* USER CODE END 5 */ 
 }
@@ -400,7 +437,7 @@ void StartTask02(void const * argument)
   for(;;)
   {
 	MPU6050_getAllData(allData);
-    osDelay(50);
+    osDelay(20);
   }
   /* USER CODE END StartTask02 */
 }
@@ -420,13 +457,33 @@ void StartTask03(void const * argument)
   {
 //	a[0] = (uint8_t)sideData;
 //	a[1] = (uint8_t)speedData;
+
 	r_wheel_data[0] = sideDataRight;
 	r_wheel_data[1] = speedDataRight;
 	l_wheel_data[0] = sideDataLeft;
 	l_wheel_data[1] = speedDataLeft;
-	HAL_CAN_AddTxMessage(&hcan1, &r_wheelHeader, &r_wheel_data, &TxMailbox);
+
 	HAL_CAN_AddTxMessage(&hcan1, &l_wheelHeader, &l_wheel_data, &TxMailbox);
-    osDelay(20);
+	osDelay(5);
+	HAL_CAN_AddTxMessage(&hcan1, &r_wheelHeader, &r_wheel_data, &TxMailbox);
+	osDelay(5);
+	rpm_right_handler();
+	osDelay(5);
+	rpm_left_handler();
+	osDelay(5);
+	spinOnce();
+//	HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO0, &wheel_RxHeader, &speedRXData);
+//	if (wheel_RxHeader.StdId == 0x3F) {
+//		speedRXDataLeft = speedRXData;
+//	}
+//	else if (wheel_RxHeader.StdId == 0x3E) {
+//		speedRXDataRight = speedRXData;
+//	}
+//	osDelay(5);
+////	HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO0, &wheel_RxHeader, &speedRXData);
+////	osDelay(5);
+
+//	osDelay(5);
 //    a[0] = 1;
 //    a[1] = 30;
 //    HAL_CAN_AddTxMessage(&hcan1, &r_wheelHeader, &a, &TxMailbox);

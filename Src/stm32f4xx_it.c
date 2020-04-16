@@ -25,6 +25,11 @@
 #include "task.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "nbt.h"
+#include <math.h>
+#include "cpp_main.h"
+#include "ringbuffer.h"
+#include "mpu6050_usr.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -59,11 +64,15 @@
 
 /* External variables --------------------------------------------------------*/
 extern PCD_HandleTypeDef hpcd_USB_OTG_FS;
+extern CAN_HandleTypeDef hcan1;
 extern I2C_HandleTypeDef hi2c1;
 extern TIM_HandleTypeDef htim3;
 
 /* USER CODE BEGIN EV */
-
+extern CAN_RxHeaderTypeDef wheel_RxHeader;
+extern uint8_t speedRXData;
+extern uint8_t speedRXDataRight;
+extern uint8_t speedRXDataLeft;
 /* USER CODE END EV */
 
 /******************************************************************************/
@@ -161,6 +170,46 @@ void DebugMon_Handler(void)
 /* For the available peripheral interrupt handler names,                      */
 /* please refer to the startup file (startup_stm32f4xx.s).                    */
 /******************************************************************************/
+
+/**
+  * @brief This function handles CAN1 RX0 interrupts.
+  */
+void CAN1_RX0_IRQHandler(void)
+{
+  /* USER CODE BEGIN CAN1_RX0_IRQn 0 */
+  //HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO0, &wheel_RxHeader, &speedRXData);
+//  //HAL_Delay(1);
+//  if (wheel_RxHeader.StdId == 0x3F) {
+//	speedRXDataLeft = speedRXData;
+//	//rpm_left_handler();
+//	//osDelay(1);
+//
+//  }
+//  else if (wheel_RxHeader.StdId == 0x3E) {
+//	speedRXDataRight = speedRXData;
+//	//rpm_right_handler();
+//	//osDelay(1);
+//  }
+  /* USER CODE END CAN1_RX0_IRQn 0 */
+  HAL_CAN_IRQHandler(&hcan1);
+  /* USER CODE BEGIN CAN1_RX0_IRQn 1 */
+
+  /* USER CODE END CAN1_RX0_IRQn 1 */
+}
+
+/**
+  * @brief This function handles CAN1 RX1 interrupt.
+  */
+void CAN1_RX1_IRQHandler(void)
+{
+  /* USER CODE BEGIN CAN1_RX1_IRQn 0 */
+
+  /* USER CODE END CAN1_RX1_IRQn 0 */
+  HAL_CAN_IRQHandler(&hcan1);
+  /* USER CODE BEGIN CAN1_RX1_IRQn 1 */
+
+  /* USER CODE END CAN1_RX1_IRQn 1 */
+}
 
 /**
   * @brief This function handles TIM3 global interrupt.
