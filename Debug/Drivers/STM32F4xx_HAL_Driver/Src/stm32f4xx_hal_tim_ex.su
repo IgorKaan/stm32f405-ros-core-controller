@@ -26,9 +26,9 @@ stm32f4xx_hal_tim_ex.c:1366:19:HAL_TIMEx_OnePulseN_Start_IT	0	static
 stm32f4xx_hal_tim_ex.c:1397:19:HAL_TIMEx_OnePulseN_Stop_IT	0	static
 stm32f4xx_hal_tim_ex.c:1467:19:HAL_TIMEx_ConfigCommutEvent	4	static
 stm32f4xx_hal_tim_ex.c:1523:19:HAL_TIMEx_ConfigCommutEvent_IT	4	static
-stm32f4xx_hal_tim_ex.c:1580:19:HAL_TIMEx_ConfigCommutEvent_DMA	16	static
+stm32f4xx_hal_tim_ex.c:1580:19:HAL_TIMEx_ConfigCommutEvent_DMA	12	static
 stm32f4xx_hal_tim_ex.c:1629:19:HAL_TIMEx_MasterConfigSynchronization	12	static
-stm32f4xx_hal_tim_ex.c:1690:19:HAL_TIMEx_ConfigBreakDeadTime	16	static
+stm32f4xx_hal_tim_ex.c:1690:19:HAL_TIMEx_ConfigBreakDeadTime	8	static
 stm32f4xx_hal_tim_ex.c:1766:19:HAL_TIMEx_RemapConfig	0	static
 stm32f4xx_hal_tim_ex.c:1822:13:HAL_TIMEx_CommutCallback	0	static
 stm32f4xx_hal_tim_ex.c:1907:6:TIMEx_DMACommutationCplt	8	static

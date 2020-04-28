@@ -1,4 +1,4 @@
-usbd_conf.c:68:6:HAL_PCD_MspInit	56	static
+usbd_conf.c:68:6:HAL_PCD_MspInit	48	static
 usbd_conf.c:107:6:HAL_PCD_MspDeInit	8	static
 usbd_conf.c:141:6:HAL_PCD_SetupStageCallback	0	static
 usbd_conf.c:156:6:HAL_PCD_DataOutStageCallback	0	static

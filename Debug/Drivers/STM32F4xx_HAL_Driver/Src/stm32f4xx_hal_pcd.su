@@ -19,8 +19,8 @@ stm32f4xx_hal_pcd.c:1038:6:HAL_PCD_IRQHandler	72	static
 stm32f4xx_hal_pcd.c:1620:19:HAL_PCD_DevConnect	8	static
 stm32f4xx_hal_pcd.c:1645:19:HAL_PCD_DevDisconnect	8	static
 stm32f4xx_hal_pcd.c:1659:19:HAL_PCD_SetAddress	8	static
-stm32f4xx_hal_pcd.c:1675:19:HAL_PCD_EP_Open	16	static
-stm32f4xx_hal_pcd.c:1719:19:HAL_PCD_EP_Close	8	static
+stm32f4xx_hal_pcd.c:1675:19:HAL_PCD_EP_Open	24	static
+stm32f4xx_hal_pcd.c:1719:19:HAL_PCD_EP_Close	16	static
 stm32f4xx_hal_pcd.c:1750:19:HAL_PCD_EP_Receive	16	static
 stm32f4xx_hal_pcd.c:1786:10:HAL_PCD_EP_GetRxCount	0	static
 stm32f4xx_hal_pcd.c:1798:19:HAL_PCD_EP_Transmit	16	static

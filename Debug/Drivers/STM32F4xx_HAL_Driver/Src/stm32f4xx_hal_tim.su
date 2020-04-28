@@ -6,7 +6,7 @@ stm32f4xx_hal_tim.c:384:19:HAL_TIM_Base_Start	0	static
 stm32f4xx_hal_tim.c:413:19:HAL_TIM_Base_Stop	0	static
 stm32f4xx_hal_tim.c:436:19:HAL_TIM_Base_Start_IT	0	static
 stm32f4xx_hal_tim.c:462:19:HAL_TIM_Base_Stop_IT	0	static
-stm32f4xx_hal_tim.c:483:19:HAL_TIM_Base_Start_DMA	24	static
+stm32f4xx_hal_tim.c:483:19:HAL_TIM_Base_Start_DMA	16	static
 stm32f4xx_hal_tim.c:542:19:HAL_TIM_Base_Stop_DMA	8	static
 stm32f4xx_hal_tim.c:685:13:HAL_TIM_OC_MspInit	0	static
 stm32f4xx_hal_tim.c:597:19:HAL_TIM_OC_Init	24	static
@@ -56,9 +56,9 @@ stm32f4xx_hal_tim.c:2862:19:HAL_TIM_Encoder_Start_IT	0	static
 stm32f4xx_hal_tim.c:2912:19:HAL_TIM_Encoder_Stop_IT	0	static
 stm32f4xx_hal_tim.c:2966:19:HAL_TIM_Encoder_Start_DMA	32	static
 stm32f4xx_hal_tim.c:3101:19:HAL_TIM_Encoder_Stop_DMA	8	static
-stm32f4xx_hal_tim.c:3382:19:HAL_TIM_OC_ConfigChannel	20	static
-stm32f4xx_hal_tim.c:3462:19:HAL_TIM_IC_ConfigChannel	20	static
-stm32f4xx_hal_tim.c:3559:19:HAL_TIM_PWM_ConfigChannel	20	static
+stm32f4xx_hal_tim.c:3382:19:HAL_TIM_OC_ConfigChannel	16	static
+stm32f4xx_hal_tim.c:3462:19:HAL_TIM_IC_ConfigChannel	16	static
+stm32f4xx_hal_tim.c:3559:19:HAL_TIM_PWM_ConfigChannel	16	static
 stm32f4xx_hal_tim.c:3674:19:HAL_TIM_OnePulse_ConfigChannel	36	static
 stm32f4xx_hal_tim.c:3813:19:HAL_TIM_DMABurst_WriteStart	24	static
 stm32f4xx_hal_tim.c:3982:19:HAL_TIM_DMABurst_WriteStop	16	static
@@ -68,8 +68,8 @@ stm32f4xx_hal_tim.c:4320:19:HAL_TIM_GenerateEvent	8	static
 stm32f4xx_hal_tim.c:4357:19:HAL_TIM_ConfigOCrefClear	12	static
 stm32f4xx_hal_tim.c:4481:19:HAL_TIM_ConfigClockSource	16	static
 stm32f4xx_hal_tim.c:4633:19:HAL_TIM_ConfigTI1Input	0	static
-stm32f4xx_hal_tim.c:4665:19:HAL_TIM_SlaveConfigSynchro	12	static
-stm32f4xx_hal_tim.c:4705:19:HAL_TIM_SlaveConfigSynchro_IT	12	static
+stm32f4xx_hal_tim.c:4665:19:HAL_TIM_SlaveConfigSynchro	16	static
+stm32f4xx_hal_tim.c:4705:19:HAL_TIM_SlaveConfigSynchro_IT	16	static
 stm32f4xx_hal_tim.c:4748:10:HAL_TIM_ReadCapturedValue	0	static
 stm32f4xx_hal_tim.c:4832:13:HAL_TIM_PeriodElapsedCallback	0	static
 stm32f4xx_hal_tim.c:5738:13:TIM_DMAPeriodElapsedCplt	8	static

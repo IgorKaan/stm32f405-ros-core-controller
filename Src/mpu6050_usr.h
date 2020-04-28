@@ -1,7 +1,7 @@
 /*
  * vl53l0x.h
  *
- *  Created on: 30 окт. 2019 г.
+ *  Created on: 30 пїЅпїЅпїЅ. 2019 пїЅ.
  *      Author: Igor
  */
 
@@ -56,8 +56,8 @@ void error(void);
 void sensor_ini(void);
 uint8_t read_id(void);
 
-static uint8_t I2Cx_ReadData(uint16_t Addr, uint8_t Reg);
-static void I2Cx_WriteData(uint16_t DeviceAddr, uint8_t RegisterAddr, uint8_t Value);
+uint8_t I2Cx_ReadData(uint16_t Addr, uint8_t Reg);
+void I2Cx_WriteData(uint16_t DeviceAddr, uint8_t RegisterAddr, uint8_t Value);
 uint8_t sensor_io_read(uint16_t DeviceAddr, uint8_t RegisterAddr);
 uint8_t sensor_io_write(uint16_t DeviceAddr, uint8_t RegisterAddr, uint8_t Value);
 

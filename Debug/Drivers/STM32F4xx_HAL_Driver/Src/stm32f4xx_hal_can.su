@@ -8,11 +8,11 @@ stm32f4xx_hal_can.c:1084:19:HAL_CAN_Stop	16	static
 stm32f4xx_hal_can.c:1139:19:HAL_CAN_RequestSleep	0	static
 stm32f4xx_hal_can.c:1170:19:HAL_CAN_WakeUp	8	static
 stm32f4xx_hal_can.c:1219:10:HAL_CAN_IsSleepActive	0	static
-stm32f4xx_hal_can.c:1250:19:HAL_CAN_AddTxMessage	16	static
+stm32f4xx_hal_can.c:1250:19:HAL_CAN_AddTxMessage	12	static
 stm32f4xx_hal_can.c:1358:19:HAL_CAN_AbortTxRequest	0	static
 stm32f4xx_hal_can.c:1407:10:HAL_CAN_GetTxMailboxesFreeLevel	0	static
 stm32f4xx_hal_can.c:1450:10:HAL_CAN_IsTxMessagePending	0	static
-stm32f4xx_hal_can.c:1482:10:HAL_CAN_GetTxTimestamp	0	static
+stm32f4xx_hal_can.c:1482:10:HAL_CAN_GetTxTimestamp	0	static,ignoring_inline_asm
 stm32f4xx_hal_can.c:1516:19:HAL_CAN_GetRxMessage	24	static
 stm32f4xx_hal_can.c:1606:10:HAL_CAN_GetRxFifoFillLevel	0	static
 stm32f4xx_hal_can.c:1659:19:HAL_CAN_ActivateNotification	0	static

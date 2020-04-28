@@ -11,6 +11,9 @@
 #include "std_msgs/Byte.h"
 #include "std_msgs/String.h"
 #include "std_msgs/Int8.h"
+
+#include "std_msgs/UInt8.h"
+
 #include "std_msgs/Int16.h"
 #include "std_msgs/Int32.h"
 #include "std_msgs/UInt32.h"
@@ -33,6 +36,10 @@ extern int8_t speedDataLeft;
 extern int8_t sideRXDataRight;
 extern int8_t sideRXDataLeft;
 
+extern uint8_t sensorData1;
+extern uint8_t sensorData2;
+extern uint8_t sensorData3;
+
 extern uint8_t speedRXDataRight;
 extern uint8_t speedRXDataLeft;
 extern uint32_t leftCount, rightCount;
@@ -49,8 +56,12 @@ std_msgs::Int8 uint_msg_left;
 std_msgs::UInt32 id_msg;
 std_msgs::UInt32 right_can;
 std_msgs::UInt32 left_can;
+
+std_msgs::UInt8 sensor_data_msg;
+
 geometry_msgs::Vector3 gyro_msg;
 geometry_msgs::Vector3 accel_msg;
+
 
 extern "C" void messageSide(const std_msgs::Byte& msg);
 extern "C" void messageSpeed(const std_msgs::Byte& msg);
@@ -70,6 +81,8 @@ ros::Subscriber<std_msgs::Byte> speedD("speed", messageSpeed);
 ros::Subscriber<std_msgs::Int8> rpm_right_sub("rpm_right_sub", rpm_right_subCb);
 ros::Subscriber<std_msgs::Int8> rpm_left_sub("rpm_left_sub", rpm_left_subCb);
 
+ros::Publisher sensor_data("sensor_data", &sensor_data_msg);
+
 static nbt_t id_nbt;
 static nbt_t publish_nbt;
 static nbt_t vector_nbt;
@@ -81,6 +94,8 @@ static nbt_t rpm_left_nbt;
 static nbt_t right_can_msg_nbt;
 static nbt_t left_can_msg_nbt;
 static nbt_t ros_nbt;
+
+static nbt_t sensor_data_nbt;
 
 void reduce_speed() {
 		HAL_Delay(2000);
@@ -147,6 +162,7 @@ extern "C" void init_ROS(void)
 	nh.advertise(right_can_msg);
 	nh.advertise(left_can_msg);
 	nh.advertise(id);
+	nh.advertise(sensor_data);
 //	nh.subscribe(sideD);
 //	nh.subscribe(speedD);
 	nh.subscribe(rpm_left_sub);
@@ -162,6 +178,8 @@ extern "C" void init_ROS(void)
 	NBT_init(&accel_nbt, 9);
 	NBT_init(&ros_nbt, 1);
 	NBT_init(&id_nbt, 9);
+
+	NBT_init(&sensor_data_nbt, 9);
 }
 
 extern "C" void id_handler(CAN_RxHeaderTypeDef &wheel_RxHeader)
@@ -241,20 +259,18 @@ extern "C" void rpm_left_handler(void)
 	  }
 }
 
-extern "C" void point_handler(void)
+extern "C" void sensor_handler(void)
 {
-  if (NBT_handler(&point_nbt))
+  if (NBT_handler(&sensor_data_nbt))
 	 {
-//		  point_msg.x = x;
-//		  point_msg.y = y;
-//		  point_msg.z = z;//
-//	  	  point_msg.x = aPitch;
-//	  	  point_msg.y = aRoll;
-//	  	  point_msg.z = aYaw;
-		  //point.publish(&point_msg);
-//		  x++;
-//		  y++;
-//		  z++;
+	  	  sensor_data_msg.data = sensorData1;
+		  //point_msg.y = sensorData2;
+	  	  //sensorData1++;
+	  	  //sensorData1++;
+		  //point_msg.z = sensorData3;//
+
+	  	  sensor_data.publish(&sensor_data_msg);
+	  	  //sensorData1++;
 	 }
 
 }

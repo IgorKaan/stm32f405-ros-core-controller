@@ -25,7 +25,9 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-uint8_t usbRxData[APP_RX_DATA_SIZE] ;                                               //The number should be the same as APP_RX_DATA_SIZE
+uint8_t usbRxData[APP_RX_DATA_SIZE] ;
+
+//The number should be the same as APP_RX_DATA_SIZE
 #include "nbt.h"
 #include <math.h>
 #include "cpp_main.h"
@@ -72,11 +74,14 @@ int8_t sideDataRight;
 int8_t speedDataRight;
 int8_t sideDataLeft;
 int8_t speedDataLeft;
+uint8_t sensorData1;
+uint8_t sensorData2;
+uint8_t sensorData3;
 uint8_t speedRXDataRight;
 uint8_t speedRXDataLeft;
 uint8_t sideRXDataRight;
 uint8_t sideRXDataLeft;
-uint8_t speedRXData[8];
+uint8_t canRXData[8];
 float gyroX;
 float gyroY;
 float gyroZ;
@@ -100,7 +105,13 @@ void StartTask02(void const * argument);
 void StartTask03(void const * argument);
 
 /* USER CODE BEGIN PFP */
-
+void rpm_right_handler(void);
+void rpm_left_handler(void);
+void sensor_handler(void);
+void accel_handler(void);
+void gyro_handler(void);
+void spinOnce(void);
+void init_ROS(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -372,27 +383,27 @@ static void MX_GPIO_Init(void)
 /* USER CODE BEGIN 4 */
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
 
-	HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO0, &wheel_RxHeader, &speedRXData);
-	//osDelay(5);
+	HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO0, &wheel_RxHeader, canRXData);
 	if (wheel_RxHeader.StdId == 0xFFF) {
 
 	}
 	else if (wheel_RxHeader.StdId == 0x7F) {
-		speedRXDataLeft = speedRXData[0];
-		sideRXDataLeft = speedRXData[1];
-		//leftCount++;
-		//rpm_left_handler();
-		//osDelay(1);
-
+		speedRXDataLeft = canRXData[0];
+		sideRXDataLeft = canRXData[1];
 	}
 	else if (wheel_RxHeader.StdId == 0x3F) {
-		speedRXDataRight = speedRXData[0];
-		sideRXDataRight = speedRXData[1];
-		//rightCount++;
-		//rpm_right_handler();
-		//osDelay(1);
+		speedRXDataRight = canRXData[0];
+		sideRXDataRight = canRXData[1];
 	}
-	wheel_RxHeader.StdId = 0x0000;
+	else if (wheel_RxHeader.StdId == 0x3D) {
+		sensorData1 = canRXData[0];
+		sensorData2 = canRXData[1];
+		sensorData3 = canRXData[2];
+		sensorData3 = canRXData[3];
+		sensorData3 = canRXData[4];
+		sensorData3 = canRXData[5];
+	}
+	wheel_RxHeader.StdId = 0x000;
 }
 /* USER CODE END 4 */
 
@@ -455,40 +466,22 @@ void StartTask03(void const * argument)
   /* Infinite loop */
   for(;;)
   {
-//	a[0] = (uint8_t)sideData;
-//	a[1] = (uint8_t)speedData;
-
 	r_wheel_data[0] = sideDataRight;
 	r_wheel_data[1] = speedDataRight;
 	l_wheel_data[0] = sideDataLeft;
 	l_wheel_data[1] = speedDataLeft;
 
-	HAL_CAN_AddTxMessage(&hcan1, &l_wheelHeader, &l_wheel_data, &TxMailbox);
+	HAL_CAN_AddTxMessage(&hcan1, &l_wheelHeader, l_wheel_data, &TxMailbox);
 	osDelay(5);
-	HAL_CAN_AddTxMessage(&hcan1, &r_wheelHeader, &r_wheel_data, &TxMailbox);
+	HAL_CAN_AddTxMessage(&hcan1, &r_wheelHeader, r_wheel_data, &TxMailbox);
 	osDelay(5);
 	rpm_right_handler();
 	osDelay(5);
 	rpm_left_handler();
 	osDelay(5);
+	sensor_handler();
+	osDelay(5);
 	spinOnce();
-//	HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO0, &wheel_RxHeader, &speedRXData);
-//	if (wheel_RxHeader.StdId == 0x3F) {
-//		speedRXDataLeft = speedRXData;
-//	}
-//	else if (wheel_RxHeader.StdId == 0x3E) {
-//		speedRXDataRight = speedRXData;
-//	}
-//	osDelay(5);
-////	HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO0, &wheel_RxHeader, &speedRXData);
-////	osDelay(5);
-
-//	osDelay(5);
-//    a[0] = 1;
-//    a[1] = 30;
-//    HAL_CAN_AddTxMessage(&hcan1, &r_wheelHeader, &a, &TxMailbox);
-//    HAL_CAN_AddTxMessage(&hcan1, &l_wheelHeader, &a, &TxMailbox);
-//    osDelay(1000);
   }
   /* USER CODE END StartTask03 */
 }

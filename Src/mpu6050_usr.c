@@ -58,7 +58,7 @@ uint8_t sensor_io_write(uint16_t DeviceAddr, uint8_t RegisterAddr, uint8_t Value
 	return HAL_OK;
 }
 
-static uint8_t I2Cx_ReadData(uint16_t Addr, uint8_t Reg) {
+uint8_t I2Cx_ReadData(uint16_t Addr, uint8_t Reg) {
 	HAL_StatusTypeDef status = HAL_OK;
 	value = 0;
 	status = HAL_I2C_Mem_Read(&hi2c1, Addr<<1, Reg, I2C_MEMADD_SIZE_8BIT, &value, 1, 0x10000);
@@ -70,7 +70,7 @@ static uint8_t I2Cx_ReadData(uint16_t Addr, uint8_t Reg) {
 	return value;
 }
 
-static void I2Cx_WriteData(uint16_t Addr, uint8_t Reg, uint8_t Value) {
+void I2Cx_WriteData(uint16_t Addr, uint8_t Reg, uint8_t Value) {
 	HAL_StatusTypeDef status = HAL_OK;
     status = HAL_I2C_Mem_Write(&hi2c1, Addr, (uint16_t)(Reg<<1), I2C_MEMADD_SIZE_8BIT, &Value, 1, 0x10000);
     /* Check the communication status */
@@ -115,24 +115,18 @@ void MPU6050_init(void)
 
 void MPU6050_calibrate(void)
 {
-	 int16_t buffer[6];
-	 uint16_t iNumCM = 300;
-	 for (i = 0; i < iNumCM ; i ++){
-		 buffer[0] = MPU6050_readReg(MPU6050_IM, MPU6050_GYRO_XOUT_H);
-		 buffer[1] = MPU6050_readReg(MPU6050_IM, MPU6050_GYRO_XOUT_L);
-		 buffer[2] = MPU6050_readReg(MPU6050_IM, MPU6050_GYRO_YOUT_H);
-		 buffer[3] = MPU6050_readReg(MPU6050_IM, MPU6050_GYRO_YOUT_L);
-		 buffer[4] = MPU6050_readReg(MPU6050_IM, MPU6050_GYRO_ZOUT_H);
-		 buffer[5] = MPU6050_readReg(MPU6050_IM, MPU6050_GYRO_ZOUT_L);
-		 //aRoll=(((int16_t)((uint16_t)buffer[0] << 8) + buffer[1]))/65.5;
-		 //aPitch=(((int16_t)((uint16_t)buffer[2] << 8) + buffer[3]))/65.5;
-		 //aYaw=(((int16_t)((uint16_t)buffer[4] << 8) + buffer[5]))/65.5;
-	     HAL_Delay(20); // 3 ��� �� ����������
-	 }
-	 //aRoll = aRoll/iNumCM;
-	 //aPitch = aPitch/iNumCM;
-//	 aYaw /= iNumCM;
-	 is_initialized = 1;
+//	 int16_t buffer[6];
+//	 uint16_t iNumCM = 300;
+//	 for (i = 0; i < iNumCM ; i ++){
+//		 buffer[0] = MPU6050_readReg(MPU6050_IM, MPU6050_GYRO_XOUT_H);
+//		 buffer[1] = MPU6050_readReg(MPU6050_IM, MPU6050_GYRO_XOUT_L);
+//		 buffer[2] = MPU6050_readReg(MPU6050_IM, MPU6050_GYRO_YOUT_H);
+//		 buffer[3] = MPU6050_readReg(MPU6050_IM, MPU6050_GYRO_YOUT_L);
+//		 buffer[4] = MPU6050_readReg(MPU6050_IM, MPU6050_GYRO_ZOUT_H);
+//		 buffer[5] = MPU6050_readReg(MPU6050_IM, MPU6050_GYRO_ZOUT_L);
+//	     HAL_Delay(20);
+//	 }
+//	 is_initialized = 1;
 }
 
 void MPU6050_getAllData(int16_t *Data)

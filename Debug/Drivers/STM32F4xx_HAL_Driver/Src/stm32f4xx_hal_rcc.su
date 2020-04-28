@@ -1,6 +1,6 @@
 stm32f4xx_hal_rcc.c:202:26:HAL_RCC_DeInit	0	static
 stm32f4xx_hal_rcc.c:221:26:HAL_RCC_OscConfig	32	static
-stm32f4xx_hal_rcc.c:766:6:HAL_RCC_MCOConfig	56	static
+stm32f4xx_hal_rcc.c:766:6:HAL_RCC_MCOConfig	48	static
 stm32f4xx_hal_rcc.c:832:6:HAL_RCC_EnableCSS	0	static
 stm32f4xx_hal_rcc.c:841:6:HAL_RCC_DisableCSS	0	static
 stm32f4xx_hal_rcc.c:876:17:HAL_RCC_GetSysClockFreq	8	static
