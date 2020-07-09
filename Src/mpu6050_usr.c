@@ -24,7 +24,7 @@ extern int i;
 extern int is_initialized;
 //HAL_StatusTypeDef status = HAL_OK;
 uint8_t test = 0x00;
-extern uint8_t a;
+
 uint8_t value = 0;
 
 void delay(uint32_t delayTime){
@@ -64,7 +64,6 @@ uint8_t I2Cx_ReadData(uint16_t Addr, uint8_t Reg) {
 	status = HAL_I2C_Mem_Read(&hi2c1, Addr<<1, Reg, I2C_MEMADD_SIZE_8BIT, &value, 1, 0x10000);
 	if(status != HAL_OK)
 	{
-		a = 1;
 	    error();
 	}
 	return value;
@@ -92,7 +91,7 @@ void ledOff(void) {
 void sensor_ini(void) {
 	HAL_Delay(100);
 	if ((read_id()==0xFF)||(read_id()==0x70)||(read_id()==0x48)) {
-		a = 2;
+
 	}
 }
 

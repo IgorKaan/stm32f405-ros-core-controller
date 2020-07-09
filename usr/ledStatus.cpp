@@ -19,6 +19,6 @@ extern "C" void ledStatus_handler()
 {
 	if (NBT_handler(&lednbt))
 	{
-	  //HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
+
 	}
 }

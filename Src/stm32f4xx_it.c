@@ -39,7 +39,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
- 
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -73,6 +73,7 @@ extern CAN_RxHeaderTypeDef wheel_RxHeader;
 extern uint8_t speedRXData;
 extern uint8_t speedRXDataRight;
 extern uint8_t speedRXDataLeft;
+extern uint32_t f;
 /* USER CODE END EV */
 
 /******************************************************************************/
@@ -177,19 +178,7 @@ void DebugMon_Handler(void)
 void CAN1_RX0_IRQHandler(void)
 {
   /* USER CODE BEGIN CAN1_RX0_IRQn 0 */
-  //HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO0, &wheel_RxHeader, &speedRXData);
-//  //HAL_Delay(1);
-//  if (wheel_RxHeader.StdId == 0x3F) {
-//	speedRXDataLeft = speedRXData;
-//	//rpm_left_handler();
-//	//osDelay(1);
-//
-//  }
-//  else if (wheel_RxHeader.StdId == 0x3E) {
-//	speedRXDataRight = speedRXData;
-//	//rpm_right_handler();
-//	//osDelay(1);
-//  }
+
   /* USER CODE END CAN1_RX0_IRQn 0 */
   HAL_CAN_IRQHandler(&hcan1);
   /* USER CODE BEGIN CAN1_RX0_IRQn 1 */
@@ -221,7 +210,7 @@ void TIM3_IRQHandler(void)
   /* USER CODE END TIM3_IRQn 0 */
   HAL_TIM_IRQHandler(&htim3);
   /* USER CODE BEGIN TIM3_IRQn 1 */
-
+  f++;
   /* USER CODE END TIM3_IRQn 1 */
 }
 

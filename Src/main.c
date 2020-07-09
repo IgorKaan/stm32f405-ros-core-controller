@@ -33,6 +33,7 @@ uint8_t usbRxData[APP_RX_DATA_SIZE] ;
 #include "cpp_main.h"
 #include "ringbuffer.h"
 #include "mpu6050_usr.h"
+#include <stdbool.h>
 
 /* USER CODE END Includes */
 
@@ -59,11 +60,15 @@ I2C_HandleTypeDef hi2c1;
 osThreadId defaultTaskHandle;
 osThreadId IMUtaskHandle;
 osThreadId wheelControltasHandle;
+osThreadId sensorsTaskHandle;
 /* USER CODE BEGIN PV */
 CAN_TxHeaderTypeDef r_wheelHeader;
 CAN_TxHeaderTypeDef l_wheelHeader;
+CAN_TxHeaderTypeDef r_wheelHeader1;
+CAN_TxHeaderTypeDef l_wheelHeader1;
 CAN_FilterTypeDef sFilterConfig;
 CAN_RxHeaderTypeDef wheel_RxHeader;
+
 uint32_t TxMailbox;
 uint32_t leftCount, rightCount;
 uint8_t ctrl = 0x00;
@@ -74,9 +79,12 @@ int8_t sideDataRight;
 int8_t speedDataRight;
 int8_t sideDataLeft;
 int8_t speedDataLeft;
-uint8_t sensorData1;
-uint8_t sensorData2;
-uint8_t sensorData3;
+uint8_t sensorData1 = 0;
+uint8_t sensorData2 = 0;
+uint8_t sensorData3 = 0;
+uint8_t sensorData4 = 0;
+uint8_t sensorData5 = 0;
+uint8_t sensorData6 = 0;
 uint8_t speedRXDataRight;
 uint8_t speedRXDataLeft;
 uint8_t sideRXDataRight;
@@ -93,6 +101,9 @@ uint8_t l_wheel_data[2];
 uint8_t r[2];
 uint8_t side = 0;
 uint8_t pwm = 0;
+uint32_t f;
+uint8_t nh_connected = 0;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -103,11 +114,17 @@ static void MX_I2C1_Init(void);
 void StartDefaultTask(void const * argument);
 void StartTask02(void const * argument);
 void StartTask03(void const * argument);
+void StartTask04(void const * argument);
 
 /* USER CODE BEGIN PFP */
 void rpm_right_handler(void);
 void rpm_left_handler(void);
-void sensor_handler(void);
+void laser_sensor_handler_1(void);
+void laser_sensor_handler_2(void);
+void laser_sensor_handler_3(void);
+void laser_sensor_handler_4(void);
+void laser_sensor_handler_5(void);
+void laser_sensor_handler_6(void);
 void accel_handler(void);
 void gyro_handler(void);
 void spinOnce(void);
@@ -128,7 +145,6 @@ int main(void)
   /* USER CODE BEGIN 1 */
 
   /* USER CODE END 1 */
-  
 
   /* MCU Configuration--------------------------------------------------------*/
 
@@ -155,6 +171,7 @@ int main(void)
   MPU6050_init();
   HAL_Delay(1000);
   init_ROS();
+  HAL_Delay(1000);
 
   r_wheelHeader.DLC = 2;
   r_wheelHeader.IDE = CAN_ID_STD;
@@ -165,6 +182,17 @@ int main(void)
   l_wheelHeader.IDE = CAN_ID_STD;
   l_wheelHeader.RTR = CAN_RTR_DATA;
   l_wheelHeader.StdId = 0x1F;
+
+
+  r_wheelHeader1.DLC = 2;
+  r_wheelHeader1.IDE = CAN_ID_STD;
+  r_wheelHeader1.RTR = CAN_RTR_DATA;
+  r_wheelHeader1.StdId = 0x2F;
+
+  l_wheelHeader1.DLC = 2;
+  l_wheelHeader1.IDE = CAN_ID_STD;
+  l_wheelHeader1.RTR = CAN_RTR_DATA;
+  l_wheelHeader1.StdId = 0x3F;
 
 //  right_wheel_RxHeader.DLC = 1;
 //  right_wheel_RxHeader.IDE = CAN_ID_STD;
@@ -219,15 +247,18 @@ int main(void)
   osThreadDef(wheelControltas, StartTask03, osPriorityHigh, 0, 128);
   wheelControltasHandle = osThreadCreate(osThread(wheelControltas), NULL);
 
+  /* definition and creation of sensorsTask */
+  osThreadDef(sensorsTask, StartTask04, osPriorityNormal, 0, 128);
+  sensorsTaskHandle = osThreadCreate(osThread(sensorsTask), NULL);
+
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
   /* USER CODE END RTOS_THREADS */
 
   /* Start scheduler */
   osKernelStart();
-  
+ 
   /* We should never get here as control is now taken by the scheduler */
-
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
@@ -399,9 +430,9 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
 		sensorData1 = canRXData[0];
 		sensorData2 = canRXData[1];
 		sensorData3 = canRXData[2];
-		sensorData3 = canRXData[3];
-		sensorData3 = canRXData[4];
-		sensorData3 = canRXData[5];
+		sensorData4 = canRXData[3];
+		sensorData5 = canRXData[4];
+		sensorData6 = canRXData[5];
 	}
 	wheel_RxHeader.StdId = 0x000;
 }
@@ -416,20 +447,16 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
 /* USER CODE END Header_StartDefaultTask */
 void StartDefaultTask(void const * argument)
 {
-    
-    
-                 
   /* init code for USB_DEVICE */
   MX_USB_DEVICE_Init();
-
   /* USER CODE BEGIN 5 */
   /* Infinite loop */
   for(;;)
   {
 	  gyro_handler();
-	  osDelay(5);
+	  osDelay(10);
 	  accel_handler();
-	  osDelay(5);
+	  osDelay(10);
   }
   /* USER CODE END 5 */ 
 }
@@ -447,8 +474,8 @@ void StartTask02(void const * argument)
   /* Infinite loop */
   for(;;)
   {
-	MPU6050_getAllData(allData);
-    osDelay(20);
+	  MPU6050_getAllData(allData);
+	  osDelay(20);
   }
   /* USER CODE END StartTask02 */
 }
@@ -466,27 +493,63 @@ void StartTask03(void const * argument)
   /* Infinite loop */
   for(;;)
   {
-	r_wheel_data[0] = sideDataRight;
-	r_wheel_data[1] = speedDataRight;
-	l_wheel_data[0] = sideDataLeft;
-	l_wheel_data[1] = speedDataLeft;
-
-	HAL_CAN_AddTxMessage(&hcan1, &l_wheelHeader, l_wheel_data, &TxMailbox);
-	osDelay(5);
-	HAL_CAN_AddTxMessage(&hcan1, &r_wheelHeader, r_wheel_data, &TxMailbox);
-	osDelay(5);
-	rpm_right_handler();
-	osDelay(5);
-	rpm_left_handler();
-	osDelay(5);
-	sensor_handler();
-	osDelay(5);
-	spinOnce();
+//		r_wheel_data[0] = sideDataRight;
+//		r_wheel_data[1] = speedDataRight;
+//		l_wheel_data[0] = sideDataLeft;
+//		l_wheel_data[1] = speedDataLeft;
+	  	r_wheel_data[0] = 0;
+	  	r_wheel_data[1] = 50;
+	  	l_wheel_data[0] = 0;
+	  	l_wheel_data[1] = 50;
+		HAL_CAN_AddTxMessage(&hcan1, &l_wheelHeader, l_wheel_data, &TxMailbox);
+		osDelay(2);
+		HAL_CAN_AddTxMessage(&hcan1, &r_wheelHeader, r_wheel_data, &TxMailbox);
+		osDelay(2);
+		HAL_CAN_AddTxMessage(&hcan1, &l_wheelHeader1, l_wheel_data, &TxMailbox);
+		osDelay(2);
+		HAL_CAN_AddTxMessage(&hcan1, &r_wheelHeader1, r_wheel_data, &TxMailbox);
+		osDelay(2);
+		rpm_right_handler();
+		osDelay(5);
+		rpm_left_handler();
+		osDelay(5);
+		spinOnce();
   }
   /* USER CODE END StartTask03 */
 }
 
+/* USER CODE BEGIN Header_StartTask04 */
 /**
+* @brief Function implementing the sensorsTask thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_StartTask04 */
+void StartTask04(void const * argument)
+{
+  /* USER CODE BEGIN StartTask04 */
+  /* Infinite loop */
+  for(;;)
+  {
+
+	laser_sensor_handler_1();
+	osDelay(50);
+//	laser_sensor_handler_2();
+//	osDelay(5);
+//	laser_sensor_handler_3();
+//	osDelay(5);
+//	laser_sensor_handler_4();
+//	osDelay(5);
+//	laser_sensor_handler_5();
+//	osDelay(5);
+//	laser_sensor_handler_6();
+//	osDelay(5);
+
+  }
+  /* USER CODE END StartTask04 */
+}
+
+ /**
   * @brief  Period elapsed callback in non blocking mode
   * @note   This function is called  when TIM3 interrupt took place, inside
   * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment

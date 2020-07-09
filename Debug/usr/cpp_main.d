@@ -58,7 +58,6 @@ usr/cpp_main.o: ../usr/cpp_main.cpp ../usr/cpp_main.h ../Inc/main.h \
  ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h \
  /home/igor/Documents/CubeMXprojects/STM32F405VGFULL/usr/ringbuffer.h \
  /home/igor/Documents/CubeMXprojects/STM32F405VGFULL/ros_lib/std_msgs/Byte.h \
- /home/igor/Documents/CubeMXprojects/STM32F405VGFULL/ros_lib/std_msgs/String.h \
  /home/igor/Documents/CubeMXprojects/STM32F405VGFULL/ros_lib/std_msgs/Int8.h \
  /home/igor/Documents/CubeMXprojects/STM32F405VGFULL/ros_lib/std_msgs/UInt8.h \
  /home/igor/Documents/CubeMXprojects/STM32F405VGFULL/ros_lib/std_msgs/Int16.h \
@@ -67,7 +66,9 @@ usr/cpp_main.o: ../usr/cpp_main.cpp ../usr/cpp_main.h ../Inc/main.h \
  ../usr/nbt.h \
  /home/igor/Documents/CubeMXprojects/STM32F405VGFULL/ros_lib/geometry_msgs/Twist.h \
  /home/igor/Documents/CubeMXprojects/STM32F405VGFULL/ros_lib/geometry_msgs/Vector3.h \
- /home/igor/Documents/CubeMXprojects/STM32F405VGFULL/ros_lib/geometry_msgs/Point.h
+ /home/igor/Documents/CubeMXprojects/STM32F405VGFULL/ros_lib/geometry_msgs/Point.h \
+ /home/igor/Documents/CubeMXprojects/STM32F405VGFULL/ros_lib/sensor_msgs/Range.h \
+ /home/igor/Documents/CubeMXprojects/STM32F405VGFULL/ros_lib/std_msgs/Header.h
 
 ../usr/cpp_main.h:
 
@@ -193,8 +194,6 @@ usr/cpp_main.o: ../usr/cpp_main.cpp ../usr/cpp_main.h ../Inc/main.h \
 
 /home/igor/Documents/CubeMXprojects/STM32F405VGFULL/ros_lib/std_msgs/Byte.h:
 
-/home/igor/Documents/CubeMXprojects/STM32F405VGFULL/ros_lib/std_msgs/String.h:
-
 /home/igor/Documents/CubeMXprojects/STM32F405VGFULL/ros_lib/std_msgs/Int8.h:
 
 /home/igor/Documents/CubeMXprojects/STM32F405VGFULL/ros_lib/std_msgs/UInt8.h:
@@ -212,3 +211,7 @@ usr/cpp_main.o: ../usr/cpp_main.cpp ../usr/cpp_main.h ../Inc/main.h \
 /home/igor/Documents/CubeMXprojects/STM32F405VGFULL/ros_lib/geometry_msgs/Vector3.h:
 
 /home/igor/Documents/CubeMXprojects/STM32F405VGFULL/ros_lib/geometry_msgs/Point.h:
+
+/home/igor/Documents/CubeMXprojects/STM32F405VGFULL/ros_lib/sensor_msgs/Range.h:
+
+/home/igor/Documents/CubeMXprojects/STM32F405VGFULL/ros_lib/std_msgs/Header.h:

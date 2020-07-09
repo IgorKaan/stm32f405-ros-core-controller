@@ -32,7 +32,7 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#define APP_RX_DATA_SIZE 512
+#define APP_RX_DATA_SIZE 1024
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
