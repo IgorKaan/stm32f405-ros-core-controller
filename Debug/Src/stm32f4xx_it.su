@@ -4,8 +4,9 @@ stm32f4xx_it.c:113:6:MemManage_Handler	0	static
 stm32f4xx_it.c:128:6:BusFault_Handler	0	static
 stm32f4xx_it.c:143:6:UsageFault_Handler	0	static
 stm32f4xx_it.c:158:6:DebugMon_Handler	0	static
-stm32f4xx_it.c:178:6:CAN1_RX0_IRQHandler	0	static
-stm32f4xx_it.c:192:6:CAN1_RX1_IRQHandler	0	static
-stm32f4xx_it.c:206:6:TIM3_IRQHandler	8	static
-stm32f4xx_it.c:220:6:I2C1_EV_IRQHandler	0	static
-stm32f4xx_it.c:234:6:OTG_FS_IRQHandler	0	static
+stm32f4xx_it.c:178:6:RCC_IRQHandler	0	static
+stm32f4xx_it.c:191:6:CAN1_RX0_IRQHandler	0	static
+stm32f4xx_it.c:205:6:CAN1_RX1_IRQHandler	0	static
+stm32f4xx_it.c:219:6:TIM3_IRQHandler	8	static
+stm32f4xx_it.c:233:6:I2C1_EV_IRQHandler	0	static
+stm32f4xx_it.c:247:6:OTG_FS_IRQHandler	0	static

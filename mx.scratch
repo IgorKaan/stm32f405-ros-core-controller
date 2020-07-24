@@ -14,11 +14,7 @@
       <ProjectName>STM32F405VGFULL</ProjectName>
       <ProjectNature>CPP</ProjectNature>
       <Secure/>
-      <filestoremove>
-        <file>
-          <name>Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.c</name>
-        </file>
-      </filestoremove>
+      <filestoremove/>
       <sourceEntriesToRemove>
         <sourceEntry/>
       </sourceEntriesToRemove>
@@ -78,9 +74,7 @@
             <Aincludes>
               <include/>
             </Aincludes>
-            <Cincludes>
-              <include>Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2</include>
-            </Cincludes>
+            <Cincludes/>
           </inctoremove>
         </config>
       </configs>

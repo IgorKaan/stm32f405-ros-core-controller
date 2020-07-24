@@ -69,6 +69,8 @@ CAN_TxHeaderTypeDef l_wheelHeader1;
 CAN_FilterTypeDef sFilterConfig;
 CAN_RxHeaderTypeDef wheel_RxHeader;
 
+uint32_t can;
+
 uint32_t TxMailbox;
 uint32_t leftCount, rightCount;
 uint8_t ctrl = 0x00;
@@ -167,7 +169,7 @@ int main(void)
   MX_CAN1_Init();
   MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
-  sensor_ini();
+  //sensor_ini();
   MPU6050_init();
   HAL_Delay(1000);
   init_ROS();
@@ -454,9 +456,9 @@ void StartDefaultTask(void const * argument)
   for(;;)
   {
 	  gyro_handler();
-	  osDelay(10);
+	  osDelay(5);
 	  accel_handler();
-	  osDelay(10);
+	  osDelay(5);
   }
   /* USER CODE END 5 */ 
 }
@@ -498,21 +500,25 @@ void StartTask03(void const * argument)
 //		l_wheel_data[0] = sideDataLeft;
 //		l_wheel_data[1] = speedDataLeft;
 	  	r_wheel_data[0] = 0;
-	  	r_wheel_data[1] = 50;
-	  	l_wheel_data[0] = 0;
-	  	l_wheel_data[1] = 50;
-		HAL_CAN_AddTxMessage(&hcan1, &l_wheelHeader, l_wheel_data, &TxMailbox);
+	  	r_wheel_data[1] = 30;
+	  	l_wheel_data[0] = 1;
+	  	l_wheel_data[1] = 30;
+		HAL_CAN_AddTxMessage(&hcan1, &l_wheelHeader, r_wheel_data, &TxMailbox);
 		osDelay(2);
 		HAL_CAN_AddTxMessage(&hcan1, &r_wheelHeader, r_wheel_data, &TxMailbox);
 		osDelay(2);
 		HAL_CAN_AddTxMessage(&hcan1, &l_wheelHeader1, l_wheel_data, &TxMailbox);
 		osDelay(2);
-		HAL_CAN_AddTxMessage(&hcan1, &r_wheelHeader1, r_wheel_data, &TxMailbox);
+		HAL_CAN_AddTxMessage(&hcan1, &r_wheelHeader1, l_wheel_data, &TxMailbox);
 		osDelay(2);
-		rpm_right_handler();
-		osDelay(5);
-		rpm_left_handler();
-		osDelay(5);
+		//if (HAL_CAN_StateTypeDef == HAL_OK) {
+			//can++;
+		//}
+//		osDelay(2);
+//		rpm_right_handler();
+//		osDelay(5);
+//		rpm_left_handler();
+//		osDelay(5);
 		spinOnce();
   }
   /* USER CODE END StartTask03 */

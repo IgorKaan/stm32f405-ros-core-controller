@@ -8,8 +8,7 @@
 #include "ringbuffer.h"
 #include "ros.h"
 
-//#include <string>
-
+#include <string>
 
 #include "std_msgs/Byte.h"
 #include "std_msgs/Int8.h"
@@ -167,7 +166,6 @@ extern "C" void cdc_receive_put(uint8_t value)
 	{
 		ringbuffer_putchar(&rb, value);
 	}
-
 extern "C" void init_ROS(void)
 {
 	ringbuffer_init(&rb, RxBuffer, RxBufferSize);
@@ -205,9 +203,6 @@ extern "C" void init_ROS(void)
 	NBT_init(&sensor4_data_nbt, 9);
 	NBT_init(&sensor5_data_nbt, 9);
 	NBT_init(&sensor6_data_nbt, 9);
-
-
-
 }
 
 extern "C" void laser_sensor_handler_1(void)
