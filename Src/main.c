@@ -62,73 +62,116 @@ osThreadId IMUtaskHandle;
 osThreadId wheelControltasHandle;
 osThreadId sensorsTaskHandle;
 /* USER CODE BEGIN PV */
-CAN_TxHeaderTypeDef r_wheelHeader;
-CAN_TxHeaderTypeDef l_wheelHeader;
-CAN_TxHeaderTypeDef r_wheelHeader1;
-CAN_TxHeaderTypeDef l_wheelHeader1;
+CAN_TxHeaderTypeDef rightFront_wheelHeader;
+CAN_TxHeaderTypeDef leftFront_wheelHeader;
+CAN_TxHeaderTypeDef rightBack_wheelHeader;
+CAN_TxHeaderTypeDef leftBack_wheelHeader;
 CAN_FilterTypeDef sFilterConfig;
-CAN_RxHeaderTypeDef wheel_RxHeader;
 
-uint32_t can;
+CAN_RxHeaderTypeDef wheel_RxHeader;
 
 uint32_t TxMailbox;
 uint32_t leftCount, rightCount;
 uint8_t ctrl = 0x00;
 int16_t allData[6];
-uint8_t control_data_left[2];
-uint8_t control_data_right[2];
-int8_t sideDataRight;
-int8_t speedDataRight;
-int8_t sideDataLeft;
-int8_t speedDataLeft;
+
+int8_t speedDataRightFrontWheel = 0;
+int8_t speedDataLeftFrontWheel = 0;
+int8_t speedDataRightBackWheel = 0;
+int8_t speedDataLeftBackWheel = 0;
+
+int8_t sideDataRightFrontWheel = 0;
+int8_t sideDataLeftFrontWheel = 0;
+int8_t sideDataRightBackWheel = 0;
+int8_t sideDataLeftBackWheel = 0;
+
 uint8_t sensorData1 = 0;
 uint8_t sensorData2 = 0;
 uint8_t sensorData3 = 0;
 uint8_t sensorData4 = 0;
 uint8_t sensorData5 = 0;
 uint8_t sensorData6 = 0;
-uint8_t speedRXDataRight;
-uint8_t speedRXDataLeft;
-uint8_t sideRXDataRight;
-uint8_t sideRXDataLeft;
+uint8_t sensorData7 = 0;
+uint8_t sensorData8 = 0;
+uint8_t sensorData9 = 0;
+uint8_t sensorData10 = 0;
+uint8_t sensorData11 = 0;
+uint8_t sensorData12 = 0;
+uint8_t sensorData13 = 0;
+uint8_t sensorData14 = 0;
+uint8_t sensorData15 = 0;
+uint8_t sensorData16 = 0;
+
+uint8_t speedRXDataRightFrontWheel;
+uint8_t sideRXDataRightFrontWheel;
+uint8_t speedRXDataRightBackWheel;
+uint8_t sideRXDataRightBackWheel;
+uint8_t speedRXDataLeftFrontWheel;
+uint8_t sideRXDataLeftFrontWheel;
+uint8_t speedRXDataLeftBackWheel;
+uint8_t sideRXDataLeftBackWheel;
+
 uint8_t canRXData[8];
+
 float gyroX;
 float gyroY;
 float gyroZ;
 float accelX;
 float accelY;
 float accelZ;
-uint8_t r_wheel_data[2];
-uint8_t l_wheel_data[2];
+
+uint8_t r_front_wheel_data[2] = {0,0};
+uint8_t l_front_wheel_data[2] = {0,0};
+uint8_t r_back_wheel_data[2] = {0,0};
+uint8_t l_back_wheel_data[2] = {0,0};
+
 uint8_t r[2];
 uint8_t side = 0;
 uint8_t pwm = 0;
 uint32_t f;
+uint32_t can2;
 uint8_t nh_connected = 0;
 
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
+
 static void MX_GPIO_Init(void);
 static void MX_CAN1_Init(void);
 static void MX_I2C1_Init(void);
+
 void StartDefaultTask(void const * argument);
 void StartTask02(void const * argument);
 void StartTask03(void const * argument);
 void StartTask04(void const * argument);
 
 /* USER CODE BEGIN PFP */
-void rpm_right_handler(void);
-void rpm_left_handler(void);
+void rpm_left_front_handler(void);
+void rpm_left_back_handler(void);
+void rpm_right_front_handler(void);
+void rpm_right_back_handler(void);
+
 void laser_sensor_handler_1(void);
 void laser_sensor_handler_2(void);
 void laser_sensor_handler_3(void);
 void laser_sensor_handler_4(void);
 void laser_sensor_handler_5(void);
 void laser_sensor_handler_6(void);
+void laser_sensor_handler_7(void);
+void laser_sensor_handler_8(void);
+void laser_sensor_handler_9(void);
+void laser_sensor_handler_10(void);
+void laser_sensor_handler_11(void);
+void laser_sensor_handler_12(void);
+void laser_sensor_handler_13(void);
+void laser_sensor_handler_14(void);
+void laser_sensor_handler_15(void);
+void laser_sensor_handler_16(void);
+
 void accel_handler(void);
 void gyro_handler(void);
+
 void spinOnce(void);
 void init_ROS(void);
 /* USER CODE END PFP */
@@ -169,32 +212,31 @@ int main(void)
   MX_CAN1_Init();
   MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
-  //sensor_ini();
+  sensor_ini();
   MPU6050_init();
-  HAL_Delay(1000);
+  HAL_Delay(500);
   init_ROS();
-  HAL_Delay(1000);
+  HAL_Delay(500);
 
-  r_wheelHeader.DLC = 2;
-  r_wheelHeader.IDE = CAN_ID_STD;
-  r_wheelHeader.RTR = CAN_RTR_DATA;
-  r_wheelHeader.StdId = 0xF;
+  rightFront_wheelHeader.DLC = 2;
+  rightFront_wheelHeader.IDE = CAN_ID_STD;
+  rightFront_wheelHeader.RTR = CAN_RTR_DATA;
+  rightFront_wheelHeader.StdId = 0x3F;
 
-  l_wheelHeader.DLC = 2;
-  l_wheelHeader.IDE = CAN_ID_STD;
-  l_wheelHeader.RTR = CAN_RTR_DATA;
-  l_wheelHeader.StdId = 0x1F;
+  leftFront_wheelHeader.DLC = 2;
+  leftFront_wheelHeader.IDE = CAN_ID_STD;
+  leftFront_wheelHeader.RTR = CAN_RTR_DATA;
+  leftFront_wheelHeader.StdId = 0xF;
 
+  leftBack_wheelHeader.DLC = 2;
+  leftBack_wheelHeader.IDE = CAN_ID_STD;
+  leftBack_wheelHeader.RTR = CAN_RTR_DATA;
+  leftBack_wheelHeader.StdId = 0x1F;
 
-  r_wheelHeader1.DLC = 2;
-  r_wheelHeader1.IDE = CAN_ID_STD;
-  r_wheelHeader1.RTR = CAN_RTR_DATA;
-  r_wheelHeader1.StdId = 0x2F;
-
-  l_wheelHeader1.DLC = 2;
-  l_wheelHeader1.IDE = CAN_ID_STD;
-  l_wheelHeader1.RTR = CAN_RTR_DATA;
-  l_wheelHeader1.StdId = 0x3F;
+  rightBack_wheelHeader.DLC = 2;
+  rightBack_wheelHeader.IDE = CAN_ID_STD;
+  rightBack_wheelHeader.RTR = CAN_RTR_DATA;
+  rightBack_wheelHeader.StdId = 0x2F;
 
 //  right_wheel_RxHeader.DLC = 1;
 //  right_wheel_RxHeader.IDE = CAN_ID_STD;
@@ -246,7 +288,7 @@ int main(void)
   IMUtaskHandle = osThreadCreate(osThread(IMUtask), NULL);
 
   /* definition and creation of wheelControltas */
-  osThreadDef(wheelControltas, StartTask03, osPriorityHigh, 0, 128);
+  osThreadDef(wheelControltas, StartTask03, osPriorityNormal, 0, 128);
   wheelControltasHandle = osThreadCreate(osThread(wheelControltas), NULL);
 
   /* definition and creation of sensorsTask */
@@ -321,7 +363,6 @@ void SystemClock_Config(void)
   */
 static void MX_CAN1_Init(void)
 {
-
   /* USER CODE BEGIN CAN1_Init 0 */
 
   /* USER CODE END CAN1_Init 0 */
@@ -358,7 +399,6 @@ static void MX_CAN1_Init(void)
   */
 static void MX_I2C1_Init(void)
 {
-
   /* USER CODE BEGIN I2C1_Init 0 */
 
   /* USER CODE END I2C1_Init 0 */
@@ -417,26 +457,74 @@ static void MX_GPIO_Init(void)
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
 
 	HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO0, &wheel_RxHeader, canRXData);
-	if (wheel_RxHeader.StdId == 0xFFF) {
 
+	if (wheel_RxHeader.StdId == 0xA) {
+		speedRXDataLeftFrontWheel = canRXData[0];
+		sideRXDataLeftFrontWheel = canRXData[1];
 	}
-	else if (wheel_RxHeader.StdId == 0x7F) {
-		speedRXDataLeft = canRXData[0];
-		sideRXDataLeft = canRXData[1];
+	else if (wheel_RxHeader.StdId == 0x3A) {
+		speedRXDataRightFrontWheel = canRXData[0];
+		sideRXDataRightFrontWheel = canRXData[1];
 	}
-	else if (wheel_RxHeader.StdId == 0x3F) {
-		speedRXDataRight = canRXData[0];
-		sideRXDataRight = canRXData[1];
+	else if (wheel_RxHeader.StdId == 0x2A) {
+		speedRXDataRightBackWheel = canRXData[0];
+		sideRXDataRightBackWheel = canRXData[1];
+	}
+	else if (wheel_RxHeader.StdId == 0x1A) {
+		speedRXDataLeftBackWheel = canRXData[0];
+		sideRXDataLeftBackWheel = canRXData[1];
+	}
+	if (wheel_RxHeader.StdId == 0x1D) {
+		sensorData1 = canRXData[0];
+	}
+	else if (wheel_RxHeader.StdId == 0x2D) {
+		sensorData2 = canRXData[0];
 	}
 	else if (wheel_RxHeader.StdId == 0x3D) {
-		sensorData1 = canRXData[0];
-		sensorData2 = canRXData[1];
-		sensorData3 = canRXData[2];
-		sensorData4 = canRXData[3];
-		sensorData5 = canRXData[4];
-		sensorData6 = canRXData[5];
+		sensorData3 = canRXData[0];
 	}
-	wheel_RxHeader.StdId = 0x000;
+	else if (wheel_RxHeader.StdId == 0x4D) {
+		sensorData4 = canRXData[0];
+	}
+	else if (wheel_RxHeader.StdId == 0x5D) {
+		sensorData5 = canRXData[0];
+	}
+	else if (wheel_RxHeader.StdId == 0x6D) {
+		sensorData6 = canRXData[0];
+	}
+	else if (wheel_RxHeader.StdId == 0x7D) {
+		sensorData7 = canRXData[0];
+	}
+	else if (wheel_RxHeader.StdId == 0x8D) {
+		sensorData8 = canRXData[0];
+	}
+	else if (wheel_RxHeader.StdId == 0x9D) {
+		sensorData9 = canRXData[0];
+	}
+	else if (wheel_RxHeader.StdId == 0xAD) {
+		sensorData10 = canRXData[0];
+	}
+	else if (wheel_RxHeader.StdId == 0xBD) {
+		sensorData11 = canRXData[0];
+	}
+	else if (wheel_RxHeader.StdId == 0xCD) {
+		sensorData12 = canRXData[0];
+		//12
+	}
+	else if (wheel_RxHeader.StdId == 0xDD) {
+		sensorData13 = canRXData[0];
+	}
+	else if (wheel_RxHeader.StdId == 0xED) {
+		sensorData14 = canRXData[0];
+	}
+	else if (wheel_RxHeader.StdId == 0xFD) {
+		sensorData15 = canRXData[0];
+	}
+	else if (wheel_RxHeader.StdId == 0x10D) {
+		sensorData16 = canRXData[0];
+	}
+	wheel_RxHeader.StdId = 0x0000;
+
 }
 /* USER CODE END 4 */
 
@@ -459,6 +547,7 @@ void StartDefaultTask(void const * argument)
 	  osDelay(5);
 	  accel_handler();
 	  osDelay(5);
+	  spinOnce();
   }
   /* USER CODE END 5 */ 
 }
@@ -478,6 +567,7 @@ void StartTask02(void const * argument)
   {
 	  MPU6050_getAllData(allData);
 	  osDelay(20);
+	  spinOnce();
   }
   /* USER CODE END StartTask02 */
 }
@@ -495,31 +585,32 @@ void StartTask03(void const * argument)
   /* Infinite loop */
   for(;;)
   {
-//		r_wheel_data[0] = sideDataRight;
-//		r_wheel_data[1] = speedDataRight;
-//		l_wheel_data[0] = sideDataLeft;
-//		l_wheel_data[1] = speedDataLeft;
-	  	r_wheel_data[0] = 0;
-	  	r_wheel_data[1] = 30;
-	  	l_wheel_data[0] = 1;
-	  	l_wheel_data[1] = 30;
-		HAL_CAN_AddTxMessage(&hcan1, &l_wheelHeader, r_wheel_data, &TxMailbox);
-		osDelay(2);
-		HAL_CAN_AddTxMessage(&hcan1, &r_wheelHeader, r_wheel_data, &TxMailbox);
-		osDelay(2);
-		HAL_CAN_AddTxMessage(&hcan1, &l_wheelHeader1, l_wheel_data, &TxMailbox);
-		osDelay(2);
-		HAL_CAN_AddTxMessage(&hcan1, &r_wheelHeader1, l_wheel_data, &TxMailbox);
-		osDelay(2);
-		//if (HAL_CAN_StateTypeDef == HAL_OK) {
-			//can++;
-		//}
-//		osDelay(2);
-//		rpm_right_handler();
-//		osDelay(5);
-//		rpm_left_handler();
-//		osDelay(5);
-		spinOnce();
+	  l_front_wheel_data[0] = sideDataLeftFrontWheel;
+	  l_front_wheel_data[1] = speedDataLeftFrontWheel;
+	  l_back_wheel_data[0] = sideDataLeftBackWheel;
+	  l_back_wheel_data[1] = speedDataLeftBackWheel;
+	  r_back_wheel_data[0] = sideDataRightBackWheel;
+	  r_back_wheel_data[1] = speedDataRightBackWheel;
+	  r_front_wheel_data[0] = sideDataRightFrontWheel;
+	  r_front_wheel_data[1] = speedDataRightFrontWheel;
+	  HAL_CAN_AddTxMessage(&hcan1, &leftFront_wheelHeader, l_front_wheel_data, &TxMailbox);
+	  osDelay(1);
+	  HAL_CAN_AddTxMessage(&hcan1, &rightBack_wheelHeader, r_back_wheel_data, &TxMailbox);
+	  osDelay(1);
+	  HAL_CAN_AddTxMessage(&hcan1, &leftBack_wheelHeader, l_back_wheel_data, &TxMailbox);
+      osDelay(1);
+	  HAL_CAN_AddTxMessage(&hcan1, &rightFront_wheelHeader, r_front_wheel_data, &TxMailbox);
+	  osDelay(1);
+	  rpm_left_front_handler();
+	  osDelay(1);
+	  rpm_left_back_handler();
+	  osDelay(1);
+	  rpm_right_front_handler();
+	  osDelay(1);
+	  rpm_right_back_handler();
+	  osDelay(1);
+	  spinOnce();
+	  osDelay(1);
   }
   /* USER CODE END StartTask03 */
 }
@@ -537,19 +628,39 @@ void StartTask04(void const * argument)
   /* Infinite loop */
   for(;;)
   {
-
-	laser_sensor_handler_1();
-	osDelay(50);
-//	laser_sensor_handler_2();
-//	osDelay(5);
-//	laser_sensor_handler_3();
-//	osDelay(5);
-//	laser_sensor_handler_4();
-//	osDelay(5);
-//	laser_sensor_handler_5();
-//	osDelay(5);
-//	laser_sensor_handler_6();
-//	osDelay(5);
+//	  laser_sensor_handler_1();
+//	  osDelay(1);
+//	  laser_sensor_handler_2();
+//	  osDelay(1);
+//	  laser_sensor_handler_3();
+//	  osDelay(1);
+//	  laser_sensor_handler_4();
+//	  osDelay(1);
+//	  laser_sensor_handler_5();
+//	  osDelay(1);
+//	  laser_sensor_handler_6();
+//	  osDelay(1);
+//	  laser_sensor_handler_7();
+//	  osDelay(1);
+	  laser_sensor_handler_8();
+	  osDelay(1);
+	  laser_sensor_handler_9();
+	  osDelay(1);
+//	  laser_sensor_handler_10();
+//	  osDelay(1);
+//	  laser_sensor_handler_11();
+//	  osDelay(1);
+//	  laser_sensor_handler_12();
+//	  osDelay(1);
+//	  laser_sensor_handler_13();
+//	  osDelay(1);
+//	  laser_sensor_handler_14();
+//	  osDelay(1);
+//	  laser_sensor_handler_15();
+//	  osDelay(1);
+//	  laser_sensor_handler_16();
+	  spinOnce();
+	  osDelay(1);
 
   }
   /* USER CODE END StartTask04 */
