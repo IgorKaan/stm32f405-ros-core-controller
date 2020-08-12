@@ -47,16 +47,16 @@ endif
 
 # Add inputs and outputs from these tool invocations to the build variables 
 EXECUTABLES += \
-STM32F405VGFULL.elf \
+stm32f405-ros-core-controller.elf \
 
 SIZE_OUTPUT += \
 default.size.stdout \
 
 OBJDUMP_LIST += \
-STM32F405VGFULL.list \
+stm32f405-ros-core-controller.list \
 
 OBJCOPY_BIN += \
-STM32F405VGFULL.bin \
+stm32f405-ros-core-controller.bin \
 
 
 # All Target
@@ -64,11 +64,11 @@ all:
 	+@make --no-print-directory main-build && make --no-print-directory post-build
 
 # Main-build Target
-main-build: STM32F405VGFULL.elf secondary-outputs
+main-build: stm32f405-ros-core-controller.elf secondary-outputs
 
 # Tool invocations
-STM32F405VGFULL.elf: $(OBJS) $(USER_OBJS) ../STM32F405VG_FLASH.ld
-	arm-none-eabi-g++ -o "STM32F405VGFULL.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"../STM32F405VG_FLASH.ld" --specs=nosys.specs -Wl,-Map="STM32F405VGFULL.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
+stm32f405-ros-core-controller.elf: $(OBJS) $(USER_OBJS) ../STM32F405VG_FLASH.ld
+	arm-none-eabi-g++ -o "stm32f405-ros-core-controller.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"../STM32F405VG_FLASH.ld" --specs=nosys.specs -Wl,-Map="stm32f405-ros-core-controller.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -77,13 +77,13 @@ default.size.stdout: $(EXECUTABLES)
 	@echo 'Finished building: $@'
 	@echo ' '
 
-STM32F405VGFULL.list: $(EXECUTABLES)
-	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "STM32F405VGFULL.list"
+stm32f405-ros-core-controller.list: $(EXECUTABLES)
+	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "stm32f405-ros-core-controller.list"
 	@echo 'Finished building: $@'
 	@echo ' '
 
-STM32F405VGFULL.bin: $(EXECUTABLES)
-	arm-none-eabi-objcopy  -O binary $(EXECUTABLES) "STM32F405VGFULL.bin"
+stm32f405-ros-core-controller.bin: $(EXECUTABLES)
+	arm-none-eabi-objcopy  -O binary $(EXECUTABLES) "stm32f405-ros-core-controller.bin"
 	@echo 'Finished building: $@'
 	@echo ' '
 
@@ -93,7 +93,7 @@ clean:
 	-@echo ' '
 
 post-build:
-	arm-none-eabi-objcopy -O ihex "STM32F405VGFULL.elf" "STM32F405VGFULL.hex"
+	arm-none-eabi-objcopy -O ihex "stm32f405-ros-core-controller.elf" "stm32f405-ros-core-controller.hex"
 	-@echo ' '
 
 secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST) $(OBJCOPY_BIN)

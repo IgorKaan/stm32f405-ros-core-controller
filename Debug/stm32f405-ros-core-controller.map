@@ -8680,7 +8680,7 @@ LOAD /home/igor/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-
                 0x0000000000000b9d       0x22 /home/igor/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.linux64_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7e-m/fpv4-sp/hard/libgcc.a(_dvmd_tls.o)
  .ARM.attributes
                 0x0000000000000bbf       0x22 /home/igor/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.linux64_1.0.0.201904181610/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7e-m/fpv4-sp/hard/crtn.o
-OUTPUT(STM32F405VGFULL.elf elf32-littlearm)
+OUTPUT(stm32f405-ros-core-controller.elf elf32-littlearm)
 
 .debug_info     0x0000000000000000    0x3fc01
  .debug_info    0x0000000000000000      0xa07 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.o
@@ -9109,7 +9109,7 @@ OUTPUT(STM32F405VGFULL.elf elf32-littlearm)
  .debug_macro   0x000000000002862c      0x22d usr/nbt.o
  .debug_macro   0x0000000000028859      0x2e1 usr/ringbuffer.o
 
-.debug_line     0x0000000000000000    0x1d0ff
+.debug_line     0x0000000000000000    0x1d0f7
  .debug_line    0x0000000000000000      0x902 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.o
  .debug_line    0x0000000000000902      0xb98 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_can.o
  .debug_line    0x000000000000149a      0x98e Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.o
@@ -9132,22 +9132,22 @@ OUTPUT(STM32F405VGFULL.elf elf32-littlearm)
  .debug_line    0x00000000000103aa      0x62b Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/port.o
  .debug_line    0x00000000000109d5      0x6f8 Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.o
  .debug_line    0x00000000000110cd      0x7fa Src/freertos.o
- .debug_line    0x00000000000118c7      0xe5a Src/main.o
- .debug_line    0x0000000000012721      0xa59 Src/mpu6050_usr.o
- .debug_line    0x000000000001317a      0x7b5 Src/stm32f4xx_hal_msp.o
- .debug_line    0x000000000001392f      0x747 Src/stm32f4xx_hal_timebase_tim.o
- .debug_line    0x0000000000014076      0xa3e Src/stm32f4xx_it.o
- .debug_line    0x0000000000014ab4      0x6fb Src/syscalls.o
- .debug_line    0x00000000000151af      0x71e Src/system_stm32f4xx.o
- .debug_line    0x00000000000158cd      0xa16 Src/usb_device.o
- .debug_line    0x00000000000162e3      0xaaa Src/usbd_cdc_if.o
- .debug_line    0x0000000000016d8d      0xbf6 Src/usbd_conf.o
- .debug_line    0x0000000000017983      0xad7 Src/usbd_desc.o
- .debug_line    0x000000000001845a      0x8fe ros_lib/time.o
- .debug_line    0x0000000000018d58       0x7f startup/startup_stm32f405xx.o
- .debug_line    0x0000000000018dd7     0x31c8 usr/cpp_main.o
- .debug_line    0x000000000001bf9f      0x71f usr/nbt.o
- .debug_line    0x000000000001c6be      0xa41 usr/ringbuffer.o
+ .debug_line    0x00000000000118c7      0xe52 Src/main.o
+ .debug_line    0x0000000000012719      0xa59 Src/mpu6050_usr.o
+ .debug_line    0x0000000000013172      0x7b5 Src/stm32f4xx_hal_msp.o
+ .debug_line    0x0000000000013927      0x747 Src/stm32f4xx_hal_timebase_tim.o
+ .debug_line    0x000000000001406e      0xa3e Src/stm32f4xx_it.o
+ .debug_line    0x0000000000014aac      0x6fb Src/syscalls.o
+ .debug_line    0x00000000000151a7      0x71e Src/system_stm32f4xx.o
+ .debug_line    0x00000000000158c5      0xa16 Src/usb_device.o
+ .debug_line    0x00000000000162db      0xaaa Src/usbd_cdc_if.o
+ .debug_line    0x0000000000016d85      0xbf6 Src/usbd_conf.o
+ .debug_line    0x000000000001797b      0xad7 Src/usbd_desc.o
+ .debug_line    0x0000000000018452      0x8fe ros_lib/time.o
+ .debug_line    0x0000000000018d50       0x7f startup/startup_stm32f405xx.o
+ .debug_line    0x0000000000018dcf     0x31c8 usr/cpp_main.o
+ .debug_line    0x000000000001bf97      0x71f usr/nbt.o
+ .debug_line    0x000000000001c6b6      0xa41 usr/ringbuffer.o
 
 .debug_str      0x0000000000000000    0xdc9ab
  .debug_str     0x0000000000000000    0xbaa8b Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.o

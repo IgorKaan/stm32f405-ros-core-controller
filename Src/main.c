@@ -245,16 +245,6 @@ int main(void)
   rightBack_wheelHeader.RTR = CAN_RTR_DATA;
   rightBack_wheelHeader.StdId = 0x2F;
 
-//  right_wheel_RxHeader.DLC = 1;
-//  right_wheel_RxHeader.IDE = CAN_ID_STD;
-//  right_wheel_RxHeader.RTR = CAN_RTR_DATA;
-//  right_wheel_RxHeader.StdId = 0xFF;
-//
-//  left_wheel_RxHeader.DLC = 1;
-//  left_wheel_RxHeader.IDE = CAN_ID_STD;
-//  left_wheel_RxHeader.RTR = CAN_RTR_DATA;
-//  left_wheel_RxHeader.StdId = 0x3F;
-
   sFilterConfig.FilterFIFOAssignment = CAN_FILTER_FIFO0;
   sFilterConfig.FilterIdHigh = 0;
   sFilterConfig.FilterIdLow = 0;

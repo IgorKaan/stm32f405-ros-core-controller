@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>STM32F405VGFULL</name>
+	<name>stm32f405-ros-core-controller</name>
 	<comment></comment>
 	<projects>
 	</projects>
