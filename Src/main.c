@@ -58,9 +58,11 @@ CAN_HandleTypeDef hcan1;
 I2C_HandleTypeDef hi2c1;
 
 osThreadId defaultTaskHandle;
-osThreadId IMUtaskHandle;
-osThreadId wheelControltasHandle;
-osThreadId sensorsTaskHandle;
+osThreadId task1Handle;
+osThreadId task2Handle;
+osThreadId task3Handle;
+osThreadId task4Handle;
+osThreadId task5Handle;
 /* USER CODE BEGIN PV */
 CAN_TxHeaderTypeDef rightFront_wheelHeader;
 CAN_TxHeaderTypeDef leftFront_wheelHeader;
@@ -71,6 +73,7 @@ CAN_FilterTypeDef sFilterConfig;
 CAN_RxHeaderTypeDef wheel_RxHeader;
 
 uint32_t TxMailbox;
+uint32_t pwm_can;
 uint32_t leftCount, rightCount;
 uint8_t ctrl = 0x00;
 int16_t allData[6];
@@ -102,6 +105,8 @@ uint8_t sensorData14 = 0;
 uint8_t sensorData15 = 0;
 uint8_t sensorData16 = 0;
 
+uint8_t laser_sensor_data[16] = {0};
+
 uint8_t speedRXDataRightFrontWheel;
 uint8_t sideRXDataRightFrontWheel;
 uint8_t speedRXDataRightBackWheel;
@@ -128,7 +133,7 @@ uint8_t l_back_wheel_data[2] = {0,0};
 uint8_t r[2];
 uint8_t side = 0;
 uint8_t pwm = 0;
-uint32_t f;
+uint32_t f, laser1, laser2, imu, wheels;
 uint32_t can2;
 uint8_t nh_connected = 0;
 
@@ -136,15 +141,15 @@ uint8_t nh_connected = 0;
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
-
 static void MX_GPIO_Init(void);
 static void MX_CAN1_Init(void);
 static void MX_I2C1_Init(void);
-
 void StartDefaultTask(void const * argument);
 void StartTask02(void const * argument);
 void StartTask03(void const * argument);
 void StartTask04(void const * argument);
+void StartTask05(void const * argument);
+void StartTask06(void const * argument);
 
 /* USER CODE BEGIN PFP */
 void rpm_left_front_handler(void);
@@ -168,6 +173,8 @@ void laser_sensor_handler_13(void);
 void laser_sensor_handler_14(void);
 void laser_sensor_handler_15(void);
 void laser_sensor_handler_16(void);
+
+void laser_sensors_data_handler(void);
 
 void accel_handler(void);
 void gyro_handler(void);
@@ -283,17 +290,25 @@ int main(void)
   osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 128);
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
-  /* definition and creation of IMUtask */
-  osThreadDef(IMUtask, StartTask02, osPriorityNormal, 0, 128);
-  IMUtaskHandle = osThreadCreate(osThread(IMUtask), NULL);
+  /* definition and creation of task1 */
+  osThreadDef(task1, StartTask02, osPriorityNormal, 0, 128);
+  task1Handle = osThreadCreate(osThread(task1), NULL);
 
-  /* definition and creation of wheelControltas */
-  osThreadDef(wheelControltas, StartTask03, osPriorityNormal, 0, 128);
-  wheelControltasHandle = osThreadCreate(osThread(wheelControltas), NULL);
+  /* definition and creation of task2 */
+  osThreadDef(task2, StartTask03, osPriorityNormal, 0, 128);
+  task2Handle = osThreadCreate(osThread(task2), NULL);
 
-  /* definition and creation of sensorsTask */
-  osThreadDef(sensorsTask, StartTask04, osPriorityNormal, 0, 128);
-  sensorsTaskHandle = osThreadCreate(osThread(sensorsTask), NULL);
+  /* definition and creation of task3 */
+  osThreadDef(task3, StartTask04, osPriorityNormal, 0, 128);
+  task3Handle = osThreadCreate(osThread(task3), NULL);
+
+  /* definition and creation of task4 */
+  osThreadDef(task4, StartTask05, osPriorityHigh, 0, 128);
+  task4Handle = osThreadCreate(osThread(task4), NULL);
+
+  /* definition and creation of task5 */
+  osThreadDef(task5, StartTask06, osPriorityHigh, 0, 128);
+  task5Handle = osThreadCreate(osThread(task5), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -363,6 +378,7 @@ void SystemClock_Config(void)
   */
 static void MX_CAN1_Init(void)
 {
+
   /* USER CODE BEGIN CAN1_Init 0 */
 
   /* USER CODE END CAN1_Init 0 */
@@ -399,6 +415,7 @@ static void MX_CAN1_Init(void)
   */
 static void MX_I2C1_Init(void)
 {
+
   /* USER CODE BEGIN I2C1_Init 0 */
 
   /* USER CODE END I2C1_Init 0 */
@@ -465,63 +482,65 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
 	else if (wheel_RxHeader.StdId == 0x3A) {
 		speedRXDataRightFrontWheel = canRXData[0];
 		sideRXDataRightFrontWheel = canRXData[1];
+		pwm_can = (uint32_t)((canRXData[2] << 24) | (canRXData[3] << 16) | (canRXData[4] << 8) | (canRXData[5]));
+		//pwm_can = canRXData[5];
 	}
 	else if (wheel_RxHeader.StdId == 0x2A) {
 		speedRXDataRightBackWheel = canRXData[0];
 		sideRXDataRightBackWheel = canRXData[1];
+
 	}
 	else if (wheel_RxHeader.StdId == 0x1A) {
 		speedRXDataLeftBackWheel = canRXData[0];
 		sideRXDataLeftBackWheel = canRXData[1];
 	}
 	if (wheel_RxHeader.StdId == 0x1D) {
-		sensorData1 = canRXData[0];
+		laser_sensor_data[0] = canRXData[0];
 	}
 	else if (wheel_RxHeader.StdId == 0x2D) {
-		sensorData2 = canRXData[0];
+		laser_sensor_data[1] = canRXData[0];
 	}
 	else if (wheel_RxHeader.StdId == 0x3D) {
-		sensorData3 = canRXData[0];
+		laser_sensor_data[2] = canRXData[0];
 	}
 	else if (wheel_RxHeader.StdId == 0x4D) {
-		sensorData4 = canRXData[0];
+		laser_sensor_data[3] = canRXData[0];
 	}
 	else if (wheel_RxHeader.StdId == 0x5D) {
-		sensorData5 = canRXData[0];
+		laser_sensor_data[4] = canRXData[0];
 	}
 	else if (wheel_RxHeader.StdId == 0x6D) {
-		sensorData6 = canRXData[0];
+		laser_sensor_data[5] = canRXData[0];
 	}
 	else if (wheel_RxHeader.StdId == 0x7D) {
-		sensorData7 = canRXData[0];
+		laser_sensor_data[6] = canRXData[0];
 	}
 	else if (wheel_RxHeader.StdId == 0x8D) {
-		sensorData8 = canRXData[0];
+		laser_sensor_data[7] = canRXData[0];
 	}
 	else if (wheel_RxHeader.StdId == 0x9D) {
-		sensorData9 = canRXData[0];
+		laser_sensor_data[8] = canRXData[0];
 	}
 	else if (wheel_RxHeader.StdId == 0xAD) {
-		sensorData10 = canRXData[0];
+		laser_sensor_data[9] = canRXData[0];
 	}
 	else if (wheel_RxHeader.StdId == 0xBD) {
-		sensorData11 = canRXData[0];
+		laser_sensor_data[10] = canRXData[0];
 	}
 	else if (wheel_RxHeader.StdId == 0xCD) {
-		sensorData12 = canRXData[0];
-		//12
+		laser_sensor_data[11] = canRXData[0];
 	}
 	else if (wheel_RxHeader.StdId == 0xDD) {
-		sensorData13 = canRXData[0];
+		laser_sensor_data[12] = canRXData[0];
 	}
 	else if (wheel_RxHeader.StdId == 0xED) {
-		sensorData14 = canRXData[0];
+		laser_sensor_data[13] = canRXData[0];
 	}
 	else if (wheel_RxHeader.StdId == 0xFD) {
-		sensorData15 = canRXData[0];
+		laser_sensor_data[14] = canRXData[0];
 	}
 	else if (wheel_RxHeader.StdId == 0x10D) {
-		sensorData16 = canRXData[0];
+		laser_sensor_data[15] = canRXData[0];
 	}
 	wheel_RxHeader.StdId = 0x0000;
 
@@ -544,10 +563,9 @@ void StartDefaultTask(void const * argument)
   for(;;)
   {
 	  gyro_handler();
-	  osDelay(5);
+	  osDelay(4);
 	  accel_handler();
-	  osDelay(5);
-	  spinOnce();
+	  osDelay(4);
   }
   /* USER CODE END 5 */ 
 }
@@ -567,7 +585,6 @@ void StartTask02(void const * argument)
   {
 	  MPU6050_getAllData(allData);
 	  osDelay(20);
-	  spinOnce();
   }
   /* USER CODE END StartTask02 */
 }
@@ -609,8 +626,6 @@ void StartTask03(void const * argument)
 	  osDelay(1);
 	  rpm_right_back_handler();
 	  osDelay(1);
-	  spinOnce();
-	  osDelay(1);
   }
   /* USER CODE END StartTask03 */
 }
@@ -628,42 +643,51 @@ void StartTask04(void const * argument)
   /* Infinite loop */
   for(;;)
   {
-//	  laser_sensor_handler_1();
-//	  osDelay(1);
-//	  laser_sensor_handler_2();
-//	  osDelay(1);
-//	  laser_sensor_handler_3();
-//	  osDelay(1);
-//	  laser_sensor_handler_4();
-//	  osDelay(1);
-//	  laser_sensor_handler_5();
-//	  osDelay(1);
-//	  laser_sensor_handler_6();
-//	  osDelay(1);
-//	  laser_sensor_handler_7();
-//	  osDelay(1);
-	  laser_sensor_handler_8();
-	  osDelay(1);
-	  laser_sensor_handler_9();
-	  osDelay(1);
-//	  laser_sensor_handler_10();
-//	  osDelay(1);
-//	  laser_sensor_handler_11();
-//	  osDelay(1);
-//	  laser_sensor_handler_12();
-//	  osDelay(1);
-//	  laser_sensor_handler_13();
-//	  osDelay(1);
-//	  laser_sensor_handler_14();
-//	  osDelay(1);
-//	  laser_sensor_handler_15();
-//	  osDelay(1);
-//	  laser_sensor_handler_16();
-	  spinOnce();
-	  osDelay(1);
+	  //for (int i = 0; i < sizeof(laser_sensor_data)/sizeof(uint8_t) ; ++i) {
+	//	  laser_sensor_data[i]++;
+	  //}
+	  laser_sensors_data_handler();
+	  osDelay(10);
 
   }
   /* USER CODE END StartTask04 */
+}
+
+/* USER CODE BEGIN Header_StartTask05 */
+/**
+* @brief Function implementing the task4 thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_StartTask05 */
+void StartTask05(void const * argument)
+{
+  /* USER CODE BEGIN StartTask05 */
+  /* Infinite loop */
+  for(;;)
+  {
+	  spinOnce();
+	  osDelay(10);
+  }
+  /* USER CODE END StartTask05 */
+}
+
+/* USER CODE BEGIN Header_StartTask06 */
+/**
+* @brief Function implementing the task5 thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_StartTask06 */
+void StartTask06(void const * argument)
+{
+  /* USER CODE BEGIN StartTask06 */
+  /* Infinite loop */
+  for(;;)
+  {
+	  osDelay(10);
+  }
+  /* USER CODE END StartTask06 */
 }
 
  /**

@@ -63,6 +63,9 @@ usr/cpp_main.o: ../usr/cpp_main.cpp ../usr/cpp_main.h ../Inc/main.h \
  /home/igor/Documents/CubeMXprojects/STM32F405VGFULL/ros_lib/std_msgs/Int16.h \
  /home/igor/Documents/CubeMXprojects/STM32F405VGFULL/ros_lib/std_msgs/Int32.h \
  /home/igor/Documents/CubeMXprojects/STM32F405VGFULL/ros_lib/std_msgs/UInt32.h \
+ /home/igor/Documents/CubeMXprojects/STM32F405VGFULL/ros_lib/std_msgs/UInt8MultiArray.h \
+ /home/igor/Documents/CubeMXprojects/STM32F405VGFULL/ros_lib/std_msgs/MultiArrayLayout.h \
+ /home/igor/Documents/CubeMXprojects/STM32F405VGFULL/ros_lib/std_msgs/MultiArrayDimension.h \
  ../usr/nbt.h \
  /home/igor/Documents/CubeMXprojects/STM32F405VGFULL/ros_lib/geometry_msgs/Twist.h \
  /home/igor/Documents/CubeMXprojects/STM32F405VGFULL/ros_lib/geometry_msgs/Vector3.h \
@@ -203,6 +206,12 @@ usr/cpp_main.o: ../usr/cpp_main.cpp ../usr/cpp_main.h ../Inc/main.h \
 /home/igor/Documents/CubeMXprojects/STM32F405VGFULL/ros_lib/std_msgs/Int32.h:
 
 /home/igor/Documents/CubeMXprojects/STM32F405VGFULL/ros_lib/std_msgs/UInt32.h:
+
+/home/igor/Documents/CubeMXprojects/STM32F405VGFULL/ros_lib/std_msgs/UInt8MultiArray.h:
+
+/home/igor/Documents/CubeMXprojects/STM32F405VGFULL/ros_lib/std_msgs/MultiArrayLayout.h:
+
+/home/igor/Documents/CubeMXprojects/STM32F405VGFULL/ros_lib/std_msgs/MultiArrayDimension.h:
 
 ../usr/nbt.h:
 

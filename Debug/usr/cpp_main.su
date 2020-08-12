@@ -18,6 +18,13 @@ UInt8.h:23:17:virtual int std_msgs::UInt8::serialize(unsigned char*) const	0	sta
 UInt8.h:31:17:virtual int std_msgs::UInt8::deserialize(unsigned char*)	0	static
 UInt8.h:39:18:virtual const char* std_msgs::UInt8::getType()	0	static
 UInt8.h:40:18:virtual const char* std_msgs::UInt8::getMD5()	0	static
+MultiArrayDimension.h:50:17:virtual int std_msgs::MultiArrayDimension::deserialize(unsigned char*)	24	static
+MultiArrayDimension.h:75:18:virtual const char* std_msgs::MultiArrayDimension::getType()	0	static
+MultiArrayDimension.h:76:18:virtual const char* std_msgs::MultiArrayDimension::getMD5()	0	static
+MultiArrayLayout.h:71:18:virtual const char* std_msgs::MultiArrayLayout::getType()	0	static
+MultiArrayLayout.h:72:18:virtual const char* std_msgs::MultiArrayLayout::getMD5()	0	static
+UInt8MultiArray.h:65:18:virtual const char* std_msgs::UInt8MultiArray::getType()	0	static
+UInt8MultiArray.h:66:18:virtual const char* std_msgs::UInt8MultiArray::getMD5()	0	static
 Vector3.h:47:18:virtual const char* geometry_msgs::Vector3::getType()	0	static
 Vector3.h:48:18:virtual const char* geometry_msgs::Vector3::getMD5()	0	static
 Header.h:56:17:virtual int std_msgs::Header::deserialize(unsigned char*)	24	static
@@ -25,52 +32,41 @@ Header.h:86:18:virtual const char* std_msgs::Header::getType()	0	static
 Header.h:87:18:virtual const char* std_msgs::Header::getMD5()	0	static
 Range.h:143:18:virtual const char* sensor_msgs::Range::getType()	0	static
 Range.h:144:18:virtual const char* sensor_msgs::Range::getMD5()	0	static
-cpp_main.cpp:175:17:void rpm_rightFront_subCb(const std_msgs::Int8&)	0	static
-cpp_main.cpp:190:17:void rpm_leftFront_subCb(const std_msgs::Int8&)	0	static
-cpp_main.cpp:205:17:void rpm_rightBack_subCb(const std_msgs::Int8&)	0	static
-cpp_main.cpp:220:17:void rpm_leftBack_subCb(const std_msgs::Int8&)	0	static
+cpp_main.cpp:182:17:void rpm_rightFront_subCb(const std_msgs::Int8&)	0	static
+cpp_main.cpp:197:17:void rpm_leftFront_subCb(const std_msgs::Int8&)	0	static
+cpp_main.cpp:212:17:void rpm_rightBack_subCb(const std_msgs::Int8&)	0	static
+cpp_main.cpp:227:17:void rpm_leftBack_subCb(const std_msgs::Int8&)	0	static
 node_handle.h:363:16:bool ros::NodeHandle_<Hardware, MAX_SUBSCRIBERS, MAX_PUBLISHERS, INPUT_SIZE, OUTPUT_SIZE>::connected() [with Hardware = STM32Hardware; int MAX_SUBSCRIBERS = 25; int MAX_PUBLISHERS = 25; int INPUT_SIZE = 512; int OUTPUT_SIZE = 512]	0	static
 subscriber.h:114:16:void ros::Subscriber<MsgT, void>::callback(unsigned char*) [with MsgT = std_msgs::Int8]	0	static
 subscriber.h:128:15:int ros::Subscriber<MsgT, void>::getEndpointType() [with MsgT = std_msgs::Int8]	0	static
 subscriber.h:120:24:const char* ros::Subscriber<MsgT, void>::getMsgType() [with MsgT = std_msgs::Int8]	0	static
 subscriber.h:124:24:const char* ros::Subscriber<MsgT, void>::getMsgMD5() [with MsgT = std_msgs::Int8]	0	static
 Header.h:30:17:virtual int std_msgs::Header::serialize(unsigned char*) const	16	static
+MultiArrayDimension.h:29:17:virtual int std_msgs::MultiArrayDimension::serialize(unsigned char*) const	16	static
 RequestParam.h:78:17:virtual int rosserial_msgs::RequestParamResponse::serialize(unsigned char*) const	32	static
 Log.h:31:17:virtual int rosserial_msgs::Log::serialize(unsigned char*) const	16	static
 TopicInfo.h:43:17:virtual int rosserial_msgs::TopicInfo::serialize(unsigned char*) const	24	static
 RequestParam.h:130:17:virtual int rosserial_msgs::RequestParamResponse::deserialize(unsigned char*)	48	static
+node_handle.h:513:15:int ros::NodeHandle_<Hardware, MAX_SUBSCRIBERS, MAX_PUBLISHERS, INPUT_SIZE, OUTPUT_SIZE>::publish(int, const ros::Msg*) [with Hardware = STM32Hardware; int MAX_SUBSCRIBERS = 25; int MAX_PUBLISHERS = 25; int INPUT_SIZE = 512; int OUTPUT_SIZE = 512]	32	static
 Vector3.h:38:17:virtual int geometry_msgs::Vector3::deserialize(unsigned char*)	8	static
+MultiArrayLayout.h:29:17:virtual int std_msgs::MultiArrayLayout::serialize(unsigned char*) const	40	static
 Range.h:41:17:virtual int sensor_msgs::Range::serialize(unsigned char*) const	16	static
+MultiArrayLayout.h:48:17:virtual int std_msgs::MultiArrayLayout::deserialize(unsigned char*)	40	static
 Vector3.h:29:17:virtual int geometry_msgs::Vector3::serialize(unsigned char*) const	12	static
 Range.h:90:17:virtual int sensor_msgs::Range::deserialize(unsigned char*)	24	static
-node_handle.h:513:15:int ros::NodeHandle_<Hardware, MAX_SUBSCRIBERS, MAX_PUBLISHERS, INPUT_SIZE, OUTPUT_SIZE>::publish(int, const ros::Msg*) [with Hardware = STM32Hardware; int MAX_SUBSCRIBERS = 25; int MAX_PUBLISHERS = 25; int INPUT_SIZE = 512; int OUTPUT_SIZE = 512]	40	static
-node_handle.h:513:15:int ros::NodeHandle_<Hardware, MAX_SUBSCRIBERS, MAX_PUBLISHERS, INPUT_SIZE, OUTPUT_SIZE>::publish(int, const ros::Msg*) [with Hardware = STM32Hardware; int MAX_SUBSCRIBERS = 25; int MAX_PUBLISHERS = 25; int INPUT_SIZE = 512; int OUTPUT_SIZE = 512]	40	static
+UInt8MultiArray.h:29:17:virtual int std_msgs::UInt8MultiArray::serialize(unsigned char*) const	40	static
+UInt8MultiArray.h:45:17:virtual int std_msgs::UInt8MultiArray::deserialize(unsigned char*)	40	static
 cpp_main.cpp:242:17:void cdc_receive_put(uint8_t)	0	static
 cpp_main.cpp:246:17:void init_ROS()	8	static
-cpp_main.cpp:310:17:void laser_sensor_handler_1()	80	static
-cpp_main.cpp:326:17:void laser_sensor_handler_2()	80	static
-cpp_main.cpp:342:17:void laser_sensor_handler_3()	80	static
-cpp_main.cpp:358:17:void laser_sensor_handler_4()	80	static
-cpp_main.cpp:374:17:void laser_sensor_handler_5()	80	static
-cpp_main.cpp:390:17:void laser_sensor_handler_6()	80	static
-cpp_main.cpp:406:17:void laser_sensor_handler_7()	64	static
-cpp_main.cpp:420:17:void laser_sensor_handler_8()	64	static
-cpp_main.cpp:434:17:void laser_sensor_handler_9()	64	static
-cpp_main.cpp:448:17:void laser_sensor_handler_10()	64	static
-cpp_main.cpp:462:17:void laser_sensor_handler_11()	64	static
-cpp_main.cpp:476:17:void laser_sensor_handler_12()	64	static
-cpp_main.cpp:490:17:void laser_sensor_handler_13()	64	static
-cpp_main.cpp:504:17:void laser_sensor_handler_14()	64	static
-cpp_main.cpp:518:17:void laser_sensor_handler_15()	64	static
-cpp_main.cpp:532:17:void laser_sensor_handler_16()	64	static
-cpp_main.cpp:546:17:void rpm_right_front_handler()	16	static
-cpp_main.cpp:565:17:void rpm_left_front_handler()	16	static
-cpp_main.cpp:584:17:void rpm_right_back_handler()	16	static
-cpp_main.cpp:603:17:void rpm_left_back_handler()	16	static
-cpp_main.cpp:622:17:void gyro_handler()	24	static
-cpp_main.cpp:635:17:void accel_handler()	24	static
+cpp_main.cpp:313:17:void laser_sensors_data_handler()	64	static
+cpp_main.cpp:560:17:void rpm_right_front_handler()	16	static
+cpp_main.cpp:579:17:void rpm_left_front_handler()	16	static
+cpp_main.cpp:598:17:void rpm_right_back_handler()	16	static
+cpp_main.cpp:617:17:void rpm_left_back_handler()	16	static
+cpp_main.cpp:636:17:void gyro_handler()	24	static
+cpp_main.cpp:649:17:void accel_handler()	24	static
 node_handle.h:372:8:void ros::NodeHandle_<Hardware, MAX_SUBSCRIBERS, MAX_PUBLISHERS, INPUT_SIZE, OUTPUT_SIZE>::requestSyncTime() [with Hardware = STM32Hardware; int MAX_SUBSCRIBERS = 25; int MAX_PUBLISHERS = 25; int INPUT_SIZE = 512; int OUTPUT_SIZE = 512]	32	static
 node_handle.h:480:8:void ros::NodeHandle_<Hardware, MAX_SUBSCRIBERS, MAX_PUBLISHERS, INPUT_SIZE, OUTPUT_SIZE>::negotiateTopics() [with Hardware = STM32Hardware; int MAX_SUBSCRIBERS = 25; int MAX_PUBLISHERS = 25; int INPUT_SIZE = 512; int OUTPUT_SIZE = 512]	88	static
 node_handle.h:212:15:int ros::NodeHandle_<Hardware, MAX_SUBSCRIBERS, MAX_PUBLISHERS, INPUT_SIZE, OUTPUT_SIZE>::spinOnce() [with Hardware = STM32Hardware; int MAX_SUBSCRIBERS = 25; int MAX_PUBLISHERS = 25; int INPUT_SIZE = 512; int OUTPUT_SIZE = 512]	80	static
-cpp_main.cpp:649:17:void spinOnce()	72	static
-cpp_main.cpp:656:1:cpp)	40	static
+cpp_main.cpp:663:17:void spinOnce()	72	static
+cpp_main.cpp:668:1:cpp)	40	static
