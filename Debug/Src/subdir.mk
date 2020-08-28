@@ -17,20 +17,6 @@ C_SRCS += \
 ../Src/usbd_conf.c \
 ../Src/usbd_desc.c 
 
-OBJS += \
-./Src/freertos.o \
-./Src/main.o \
-./Src/mpu6050_usr.o \
-./Src/stm32f4xx_hal_msp.o \
-./Src/stm32f4xx_hal_timebase_tim.o \
-./Src/stm32f4xx_it.o \
-./Src/syscalls.o \
-./Src/system_stm32f4xx.o \
-./Src/usb_device.o \
-./Src/usbd_cdc_if.o \
-./Src/usbd_conf.o \
-./Src/usbd_desc.o 
-
 C_DEPS += \
 ./Src/freertos.d \
 ./Src/main.d \
@@ -44,6 +30,20 @@ C_DEPS += \
 ./Src/usbd_cdc_if.d \
 ./Src/usbd_conf.d \
 ./Src/usbd_desc.d 
+
+OBJS += \
+./Src/freertos.o \
+./Src/main.o \
+./Src/mpu6050_usr.o \
+./Src/stm32f4xx_hal_msp.o \
+./Src/stm32f4xx_hal_timebase_tim.o \
+./Src/stm32f4xx_it.o \
+./Src/syscalls.o \
+./Src/system_stm32f4xx.o \
+./Src/usb_device.o \
+./Src/usbd_cdc_if.o \
+./Src/usbd_conf.o \
+./Src/usbd_desc.o 
 
 
 # Each subdirectory must supply rules for building sources it contributes

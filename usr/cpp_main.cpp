@@ -55,6 +55,8 @@ extern uint8_t sideRXDataLeftFrontWheel;
 extern uint8_t speedRXDataLeftBackWheel;
 extern uint8_t sideRXDataLeftBackWheel;
 
+extern uint8_t state_can;
+
 extern uint8_t sensorData1;
 extern uint8_t sensorData2;
 extern uint8_t sensorData3;
@@ -91,7 +93,7 @@ std_msgs::Int8 uint_msg_left_back;
 
 std_msgs::UInt8MultiArray laser_sensors_data_array;
 
-std_msgs::UInt8 sensor_data_msg;
+std_msgs::UInt8 state_data_msg;
 
 geometry_msgs::Vector3 gyro_msg;
 geometry_msgs::Vector3 accel_msg;
@@ -135,6 +137,7 @@ ros::Subscriber<std_msgs::Int8> rpm_rightBack_sub("rpm_rightBack_sub", rpm_right
 ros::Subscriber<std_msgs::Int8> rpm_leftBack_sub("rpm_leftBack_sub", rpm_leftBack_subCb);
 
 ros::Publisher laser_sensors_data("laser_sensors_data", &laser_sensors_data_array);
+ros::Publisher state_data("state_data", &state_data_msg);
 
 //ros::Publisher laser_sensor_data_1("laser_sensor_msg_1", &laser_sensor_msg_1);
 //ros::Publisher laser_sensor_data_2("laser_sensor_msg_2", &laser_sensor_msg_2);
@@ -160,6 +163,7 @@ static nbt_t rpm_left_front_nbt;
 static nbt_t rpm_right_back_nbt;
 static nbt_t rpm_left_back_nbt;
 static nbt_t ros_nbt;
+static nbt_t state_nbt;
 static nbt_t laser_sensors_data_nbt;
 
 //static nbt_t sensor1_data_nbt;
@@ -189,8 +193,9 @@ extern "C" void rpm_rightFront_subCb(const std_msgs::Int8& msg)
 		speedDataRightFrontWheel = -(msg.data);
 		sideDataRightFrontWheel = 1; //CCW
 	}
-	else {
+	else if (msg.data == 0) {
 		speedDataRightFrontWheel = 0;
+		sideDataRightFrontWheel = 2;
 	}
 }
 
@@ -206,6 +211,7 @@ extern "C" void rpm_leftFront_subCb(const std_msgs::Int8& msg)
 	}
 	else {
 		speedDataLeftFrontWheel = 0;
+		sideDataLeftFrontWheel = 2;
 	}
 }
 
@@ -221,6 +227,7 @@ extern "C" void rpm_rightBack_subCb(const std_msgs::Int8& msg)
 	}
 	else {
 		speedDataRightBackWheel = 0;
+		sideDataRightBackWheel = 2;
 	}
 }
 
@@ -236,6 +243,7 @@ extern "C" void rpm_leftBack_subCb(const std_msgs::Int8& msg)
 	}
 	else {
 		speedDataLeftBackWheel = 0;
+		sideDataLeftBackWheel = 2;
 	}
 }
 
@@ -263,6 +271,8 @@ extern "C" void init_ROS(void)
 	nh.advertise(rpm_right_back);
 
 	nh.advertise(laser_sensors_data);
+
+//	nh.advertise(state_data);
 //	nh.advertise(laser_sensor_data_1);
 //	nh.advertise(laser_sensor_data_2);
 //	nh.advertise(laser_sensor_data_3);
@@ -286,6 +296,8 @@ extern "C" void init_ROS(void)
 	NBT_init(&rpm_right_back_nbt, 9);
 
 	NBT_init(&laser_sensors_data_nbt, 9);
+
+	//NBT_init(&state_nbt, 9);
 
 	NBT_init(&gyro_nbt, 5);
 	NBT_init(&accel_nbt, 5);
@@ -317,6 +329,16 @@ extern "C" void laser_sensors_data_handler(void)
 		laser_sensors_data_array.data = laser_sensor_data;
     	if (nh.connected()) {
     		laser_sensors_data.publish(&laser_sensors_data_array);
+    	}
+	}
+}
+
+extern "C" void state_data_handler(void)
+{
+	if (NBT_handler(&state_nbt)) {
+		state_data_msg.data = state_can;
+    	if (nh.connected()) {
+    		state_data.publish(&state_data_msg);
     	}
 	}
 }

@@ -73,10 +73,14 @@ CAN_FilterTypeDef sFilterConfig;
 CAN_RxHeaderTypeDef wheel_RxHeader;
 
 uint32_t TxMailbox;
-uint32_t pwm_can;
+uint8_t state_can = 0;
 uint32_t leftCount, rightCount;
 uint8_t ctrl = 0x00;
 int16_t allData[6];
+
+uint8_t hall_speed;
+uint16_t hall_tick;
+uint8_t tick;
 
 int8_t speedDataRightFrontWheel = 0;
 int8_t speedDataLeftFrontWheel = 0;
@@ -173,6 +177,8 @@ void laser_sensor_handler_13(void);
 void laser_sensor_handler_14(void);
 void laser_sensor_handler_15(void);
 void laser_sensor_handler_16(void);
+
+void state_data_handler(void);
 
 void laser_sensors_data_handler(void);
 
@@ -472,8 +478,6 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
 	else if (wheel_RxHeader.StdId == 0x3A) {
 		speedRXDataRightFrontWheel = canRXData[0];
 		sideRXDataRightFrontWheel = canRXData[1];
-		pwm_can = (uint32_t)((canRXData[2] << 24) | (canRXData[3] << 16) | (canRXData[4] << 8) | (canRXData[5]));
-		//pwm_can = canRXData[5];
 	}
 	else if (wheel_RxHeader.StdId == 0x2A) {
 		speedRXDataRightBackWheel = canRXData[0];
@@ -574,7 +578,7 @@ void StartTask02(void const * argument)
   for(;;)
   {
 	  MPU6050_getAllData(allData);
-	  osDelay(20);
+	  osDelay(10);
   }
   /* USER CODE END StartTask02 */
 }
@@ -633,12 +637,8 @@ void StartTask04(void const * argument)
   /* Infinite loop */
   for(;;)
   {
-	  //for (int i = 0; i < sizeof(laser_sensor_data)/sizeof(uint8_t) ; ++i) {
-	//	  laser_sensor_data[i]++;
-	  //}
 	  laser_sensors_data_handler();
-	  osDelay(10);
-
+	  osDelay(50);
   }
   /* USER CODE END StartTask04 */
 }

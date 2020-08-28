@@ -32,10 +32,10 @@ Header.h:86:18:virtual const char* std_msgs::Header::getType()	0	static
 Header.h:87:18:virtual const char* std_msgs::Header::getMD5()	0	static
 Range.h:143:18:virtual const char* sensor_msgs::Range::getType()	0	static
 Range.h:144:18:virtual const char* sensor_msgs::Range::getMD5()	0	static
-cpp_main.cpp:182:17:void rpm_rightFront_subCb(const std_msgs::Int8&)	0	static
-cpp_main.cpp:197:17:void rpm_leftFront_subCb(const std_msgs::Int8&)	0	static
-cpp_main.cpp:212:17:void rpm_rightBack_subCb(const std_msgs::Int8&)	0	static
-cpp_main.cpp:227:17:void rpm_leftBack_subCb(const std_msgs::Int8&)	0	static
+cpp_main.cpp:186:17:void rpm_rightFront_subCb(const std_msgs::Int8&)	0	static
+cpp_main.cpp:202:17:void rpm_leftFront_subCb(const std_msgs::Int8&)	0	static
+cpp_main.cpp:218:17:void rpm_rightBack_subCb(const std_msgs::Int8&)	0	static
+cpp_main.cpp:234:17:void rpm_leftBack_subCb(const std_msgs::Int8&)	0	static
 node_handle.h:363:16:bool ros::NodeHandle_<Hardware, MAX_SUBSCRIBERS, MAX_PUBLISHERS, INPUT_SIZE, OUTPUT_SIZE>::connected() [with Hardware = STM32Hardware; int MAX_SUBSCRIBERS = 25; int MAX_PUBLISHERS = 25; int INPUT_SIZE = 512; int OUTPUT_SIZE = 512]	0	static
 subscriber.h:114:16:void ros::Subscriber<MsgT, void>::callback(unsigned char*) [with MsgT = std_msgs::Int8]	0	static
 subscriber.h:128:15:int ros::Subscriber<MsgT, void>::getEndpointType() [with MsgT = std_msgs::Int8]	0	static
@@ -56,17 +56,18 @@ Vector3.h:29:17:virtual int geometry_msgs::Vector3::serialize(unsigned char*) co
 Range.h:90:17:virtual int sensor_msgs::Range::deserialize(unsigned char*)	24	static
 UInt8MultiArray.h:29:17:virtual int std_msgs::UInt8MultiArray::serialize(unsigned char*) const	40	static
 UInt8MultiArray.h:45:17:virtual int std_msgs::UInt8MultiArray::deserialize(unsigned char*)	40	static
-cpp_main.cpp:242:17:void cdc_receive_put(uint8_t)	0	static
-cpp_main.cpp:246:17:void init_ROS()	8	static
-cpp_main.cpp:313:17:void laser_sensors_data_handler()	64	static
-cpp_main.cpp:560:17:void rpm_right_front_handler()	16	static
-cpp_main.cpp:579:17:void rpm_left_front_handler()	16	static
-cpp_main.cpp:598:17:void rpm_right_back_handler()	16	static
-cpp_main.cpp:617:17:void rpm_left_back_handler()	16	static
-cpp_main.cpp:636:17:void gyro_handler()	24	static
-cpp_main.cpp:649:17:void accel_handler()	24	static
+cpp_main.cpp:250:17:void cdc_receive_put(uint8_t)	0	static
+cpp_main.cpp:254:17:void init_ROS()	8	static
+cpp_main.cpp:325:17:void laser_sensors_data_handler()	64	static
+cpp_main.cpp:336:17:void state_data_handler()	16	static
+cpp_main.cpp:582:17:void rpm_right_front_handler()	16	static
+cpp_main.cpp:601:17:void rpm_left_front_handler()	16	static
+cpp_main.cpp:620:17:void rpm_right_back_handler()	16	static
+cpp_main.cpp:639:17:void rpm_left_back_handler()	16	static
+cpp_main.cpp:658:17:void gyro_handler()	24	static
+cpp_main.cpp:671:17:void accel_handler()	24	static
 node_handle.h:372:8:void ros::NodeHandle_<Hardware, MAX_SUBSCRIBERS, MAX_PUBLISHERS, INPUT_SIZE, OUTPUT_SIZE>::requestSyncTime() [with Hardware = STM32Hardware; int MAX_SUBSCRIBERS = 25; int MAX_PUBLISHERS = 25; int INPUT_SIZE = 512; int OUTPUT_SIZE = 512]	32	static
 node_handle.h:480:8:void ros::NodeHandle_<Hardware, MAX_SUBSCRIBERS, MAX_PUBLISHERS, INPUT_SIZE, OUTPUT_SIZE>::negotiateTopics() [with Hardware = STM32Hardware; int MAX_SUBSCRIBERS = 25; int MAX_PUBLISHERS = 25; int INPUT_SIZE = 512; int OUTPUT_SIZE = 512]	88	static
 node_handle.h:212:15:int ros::NodeHandle_<Hardware, MAX_SUBSCRIBERS, MAX_PUBLISHERS, INPUT_SIZE, OUTPUT_SIZE>::spinOnce() [with Hardware = STM32Hardware; int MAX_SUBSCRIBERS = 25; int MAX_PUBLISHERS = 25; int INPUT_SIZE = 512; int OUTPUT_SIZE = 512]	80	static
-cpp_main.cpp:663:17:void spinOnce()	72	static
-cpp_main.cpp:668:1:cpp)	40	static
+cpp_main.cpp:685:17:void spinOnce()	72	static
+cpp_main.cpp:690:1:cpp)	40	static
