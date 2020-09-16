@@ -9,9 +9,9 @@
     <HAL_Driver>/home/igor/STM32Cube/Repository//STM32Cube_FW_F4_V1.25.0</HAL_Driver>
     <CMSIS>Drivers/CMSIS</CMSIS>
     <Toolchain>STM32CubeIDE</Toolchain>
-    <IocFile>STM32F405VGFULL.ioc</IocFile>
+    <IocFile>stm32f405-ros-core-controller.ioc</IocFile>
     <Project>
-      <ProjectName>STM32F405VGFULL</ProjectName>
+      <ProjectName>stm32f405-ros-core-controller</ProjectName>
       <ProjectNature>CPP</ProjectNature>
       <Secure/>
       <filestoremove/>
@@ -20,7 +20,7 @@
       </sourceEntriesToRemove>
       <configs>
         <config>
-          <name>STM32F405VGFULL</name>
+          <name>stm32f405-ros-core-controller</name>
           <mainSourceRepo>Src</mainSourceRepo>
           <sourceStructure>Basic</sourceStructure>
           <device>STM32F405VGTx</device>
@@ -31,7 +31,7 @@
             <memory access="xrw" name="CCMRAM" size="64" start="0x10000000"/>
             <memory access="rx" name="FLASH" size="1024" start="0x8000000"/>
           </memories>
-          <startup>/home/igor/STM32Cube/Repository//STM32Cube_FW_F4_V1.25.0/Drivers/CMSIS/Device\ST\STM32F4xx\Source\Templates\gcc\startup_stm32f405xx.s</startup>
+          <startup>/home/igor/STM32Cube/Repository/STM32Cube_FW_F4_V1.25.0/Drivers/CMSIS/Device\ST\STM32F4xx\Source\Templates\gcc\startup_stm32f405xx.s</startup>
           <LinkSettings>
             <LinkAdditionalLibs/>
           </LinkSettings>

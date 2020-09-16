@@ -35,7 +35,7 @@
 "Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.o"
 "Src/freertos.o"
 "Src/main.o"
-"Src/mpu6050_usr.o"
+"Src/mpu9250_usr.o"
 "Src/stm32f4xx_hal_msp.o"
 "Src/stm32f4xx_hal_timebase_tim.o"
 "Src/stm32f4xx_it.o"

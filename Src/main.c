@@ -17,7 +17,6 @@
   ******************************************************************************
   */
 /* USER CODE END Header */
-
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "cmsis_os.h"
@@ -32,7 +31,7 @@ uint8_t usbRxData[APP_RX_DATA_SIZE] ;
 #include <math.h>
 #include "cpp_main.h"
 #include "ringbuffer.h"
-#include "mpu6050_usr.h"
+#include "mpu9250_usr.h"
 #include <stdbool.h>
 
 /* USER CODE END Includes */
@@ -72,11 +71,15 @@ CAN_FilterTypeDef sFilterConfig;
 
 CAN_RxHeaderTypeDef wheel_RxHeader;
 
+uint32_t imucount;
+
 uint32_t TxMailbox;
 uint8_t state_can = 0;
 uint32_t leftCount, rightCount;
 uint8_t ctrl = 0x00;
 int16_t allData[6];
+
+volatile uint32_t sysTick_Time;
 
 uint8_t hall_speed;
 uint16_t hall_tick;
@@ -128,6 +131,9 @@ float gyroZ;
 float accelX;
 float accelY;
 float accelZ;
+float gyroX_filtered;
+float gyroY_filtered;
+float gyroZ_filtered;
 
 uint8_t r_front_wheel_data[2] = {0,0};
 uint8_t l_front_wheel_data[2] = {0,0};
@@ -137,6 +143,8 @@ uint8_t l_back_wheel_data[2] = {0,0};
 uint8_t r[2];
 uint8_t side = 0;
 uint8_t pwm = 0;
+int32_t gyro_bias[3]  = {0, 0, 0}, accel_bias[3] = {0, 0, 0};
+int32_t accel_bias_reg[3] = {0, 0, 0};
 uint32_t f, laser1, laser2, imu, wheels;
 uint32_t can2;
 uint8_t nh_connected = 0;
@@ -225,8 +233,9 @@ int main(void)
   MX_CAN1_Init();
   MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
-  sensor_ini();
-  MPU6050_init();
+  MPU9250_calibrate();
+  HAL_Delay(2000);
+  MPU9250_init();
   HAL_Delay(500);
   init_ROS();
   HAL_Delay(500);
@@ -291,7 +300,7 @@ int main(void)
   task1Handle = osThreadCreate(osThread(task1), NULL);
 
   /* definition and creation of task2 */
-  osThreadDef(task2, StartTask03, osPriorityNormal, 0, 128);
+  osThreadDef(task2, StartTask03, osPriorityHigh, 0, 128);
   task2Handle = osThreadCreate(osThread(task2), NULL);
 
   /* definition and creation of task3 */
@@ -299,11 +308,11 @@ int main(void)
   task3Handle = osThreadCreate(osThread(task3), NULL);
 
   /* definition and creation of task4 */
-  osThreadDef(task4, StartTask05, osPriorityHigh, 0, 128);
+  osThreadDef(task4, StartTask05, osPriorityIdle, 0, 128);
   task4Handle = osThreadCreate(osThread(task4), NULL);
 
   /* definition and creation of task5 */
-  osThreadDef(task5, StartTask06, osPriorityHigh, 0, 128);
+  osThreadDef(task5, StartTask06, osPriorityIdle, 0, 128);
   task5Handle = osThreadCreate(osThread(task5), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
@@ -312,7 +321,7 @@ int main(void)
 
   /* Start scheduler */
   osKernelStart();
- 
+
   /* We should never get here as control is now taken by the scheduler */
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
@@ -334,11 +343,12 @@ void SystemClock_Config(void)
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
-  /** Configure the main internal regulator output voltage 
+  /** Configure the main internal regulator output voltage
   */
   __HAL_RCC_PWR_CLK_ENABLE();
   __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
-  /** Initializes the CPU, AHB and APB busses clocks 
+  /** Initializes the RCC Oscillators according to the specified parameters
+  * in the RCC_OscInitTypeDef structure.
   */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
@@ -352,7 +362,7 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-  /** Initializes the CPU, AHB and APB busses clocks 
+  /** Initializes the CPU, AHB and APB buses clocks
   */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
@@ -420,7 +430,7 @@ static void MX_I2C1_Init(void)
 
   /* USER CODE END I2C1_Init 1 */
   hi2c1.Instance = I2C1;
-  hi2c1.Init.ClockSpeed = 100000;
+  hi2c1.Init.ClockSpeed = 400000;
   hi2c1.Init.DutyCycle = I2C_DUTYCYCLE_2;
   hi2c1.Init.OwnAddress1 = 0;
   hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
@@ -561,7 +571,7 @@ void StartDefaultTask(void const * argument)
 	  accel_handler();
 	  osDelay(4);
   }
-  /* USER CODE END 5 */ 
+  /* USER CODE END 5 */
 }
 
 /* USER CODE BEGIN Header_StartTask02 */
@@ -577,8 +587,9 @@ void StartTask02(void const * argument)
   /* Infinite loop */
   for(;;)
   {
-	  MPU6050_getAllData(allData);
+	  MPU9250_getAllData(allData);
 	  osDelay(10);
+	  imucount++;
   }
   /* USER CODE END StartTask02 */
 }
@@ -604,6 +615,14 @@ void StartTask03(void const * argument)
 	  r_back_wheel_data[1] = speedDataRightBackWheel;
 	  r_front_wheel_data[0] = sideDataRightFrontWheel;
 	  r_front_wheel_data[1] = speedDataRightFrontWheel;
+//	  l_front_wheel_data[0] = 0;
+//	  l_front_wheel_data[1] = 55;
+//	  l_back_wheel_data[0] = 0;
+//	  l_back_wheel_data[1] = 55;
+//	  r_back_wheel_data[0] = 1;
+//	  r_back_wheel_data[1] = 55;
+//	  r_front_wheel_data[0] = 1;
+//	  r_front_wheel_data[1] = 55;
 	  HAL_CAN_AddTxMessage(&hcan1, &leftFront_wheelHeader, l_front_wheel_data, &TxMailbox);
 	  osDelay(1);
 	  HAL_CAN_AddTxMessage(&hcan1, &rightBack_wheelHeader, r_back_wheel_data, &TxMailbox);
@@ -680,7 +699,7 @@ void StartTask06(void const * argument)
   /* USER CODE END StartTask06 */
 }
 
- /**
+/**
   * @brief  Period elapsed callback in non blocking mode
   * @note   This function is called  when TIM3 interrupt took place, inside
   * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
@@ -695,6 +714,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   /* USER CODE END Callback 0 */
   if (htim->Instance == TIM3) {
     HAL_IncTick();
+    sysTick_Time++;
   }
   /* USER CODE BEGIN Callback 1 */
 
@@ -722,7 +742,7 @@ void Error_Handler(void)
   * @retval None
   */
 void assert_failed(uint8_t *file, uint32_t line)
-{ 
+{
   /* USER CODE BEGIN 6 */
   /* User can add his own implementation to report the file name and line number,
      tex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */

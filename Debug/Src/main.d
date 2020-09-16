@@ -13,9 +13,9 @@ Src/main.o: ../Src/main.c ../Inc/main.h \
  ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h \
- ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_exti.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h \
+ ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_exti.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h \
@@ -55,7 +55,7 @@ Src/main.o: ../Src/main.c ../Inc/main.h \
  /home/igor/Documents/CubeMXprojects/STM32F405VGFULL/usr/nbt.h \
  /home/igor/Documents/CubeMXprojects/STM32F405VGFULL/usr/cpp_main.h \
  /home/igor/Documents/CubeMXprojects/STM32F405VGFULL/usr/ringbuffer.h \
- ../Src/mpu6050_usr.h
+ ../Src/mpu9250_usr.h
 
 ../Inc/main.h:
 
@@ -87,11 +87,11 @@ Src/main.o: ../Src/main.c ../Inc/main.h \
 
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h:
 
-../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_exti.h:
-
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h:
 
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h:
+
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_exti.h:
 
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h:
 
@@ -173,4 +173,4 @@ Src/main.o: ../Src/main.c ../Inc/main.h \
 
 /home/igor/Documents/CubeMXprojects/STM32F405VGFULL/usr/ringbuffer.h:
 
-../Src/mpu6050_usr.h:
+../Src/mpu9250_usr.h:
